@@ -1,1 +1,1 @@
-Project for student @HouseOfCode (Lyon)
+Project for student @HouseOfCode (Lyon) 2018
