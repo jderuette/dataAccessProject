@@ -1,13 +1,16 @@
 package fr.houseofcode.dataAccessProject;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 /**
  * Hello world!
  *
  */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main(String[] args) throws IOException, GeneralSecurityException
     {
-        System.out.println( "Hello World!" );
+        QuickStartSample.main(args);
     }
 }
