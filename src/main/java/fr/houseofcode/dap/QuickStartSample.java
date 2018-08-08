@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.houseofcode.dataAccessProject;
+package fr.houseofcode.dap;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,7 +113,7 @@ public class QuickStartSample {
         userMessage(getInboxLabels(user));
         userMessage("Nb Emails : " + getNbUnreadEmail(user));
 
-        userMessage(display(getNextEvent(user)));
+        userMessage("Prochain evennement : " + display(getNextEvent(user)));
     }
 
     private static String getNbUnreadEmail(String user) {
@@ -199,12 +199,21 @@ public class QuickStartSample {
     private static String getMyStatus(Event event) {
         String myStatus = "unknow";
         if (null != event) {
+            String currentConnectedUser = getCurrentConnectedUserEmail();
             if (null != event.getAttendees() && event.getAttendees().size() > 0) {
                 for (EventAttendee attendee : event.getAttendees()) {
-                    if (attendee.getEmail().equals(getCurrentConnectedUserEmail())) {
+                    if (attendee.getEmail().equals(currentConnectedUser)) {
                         myStatus = attendee.getResponseStatus();
+                        debug("For Event : " + event.getSummary() + " current conencted user (" + currentConnectedUser
+                                + ") is attendee and has status : " + myStatus);
                         break;
                     }
+                }
+            } else if (null != event.getOrganizer()) {
+                if (event.getOrganizer().getEmail().equals(currentConnectedUser)) {
+                    myStatus = "Organizer";
+                    debug("For Event : " + event.getSummary() + " current conencted user (" + currentConnectedUser
+                            + ") is organizer");
                 }
             }
         }

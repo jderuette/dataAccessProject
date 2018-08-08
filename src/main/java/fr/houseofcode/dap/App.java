@@ -1,4 +1,4 @@
-package fr.houseofcode.dataAccessProject;
+package fr.houseofcode.dap;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

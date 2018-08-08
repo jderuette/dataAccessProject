@@ -40,7 +40,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>fr.houseofcode.dataAccessProject.App</mainClass>
+							<mainClass>fr.houseofcode.dap.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
