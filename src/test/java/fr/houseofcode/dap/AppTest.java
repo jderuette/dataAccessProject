@@ -1,4 +1,4 @@
-package fr.houseofcode.dataAccessProject;
+package fr.houseofcode.dap;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
