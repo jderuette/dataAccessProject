@@ -1,4 +1,4 @@
-#Thu Jul 19 11:02:12 CEST 2018
+#Sat Aug 11 01:31:24 CEST 2018
 \!/=
 /instance/com.github.spotbugs.plugin.eclipse/detectorAppendingToAnObjectOutputStream=AppendingToAnObjectOutputStream|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorAtomicityProblem=AtomicityProblem|true
@@ -79,10 +79,10 @@
 /instance/com.github.spotbugs.plugin.eclipse/detectorIDivResultCastToDouble=IDivResultCastToDouble|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorIncompatMask=IncompatMask|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorInconsistentAnnotations=InconsistentAnnotations|true
-/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientIndexOf=InefficientIndexOf|false
-/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientInitializationInsideLoop=InefficientInitializationInsideLoop|false
-/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientMemberAccess=InefficientMemberAccess|false
-/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientToArray=InefficientToArray|false
+/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientIndexOf=InefficientIndexOf|true
+/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientInitializationInsideLoop=InefficientInitializationInsideLoop|true
+/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientMemberAccess=InefficientMemberAccess|true
+/instance/com.github.spotbugs.plugin.eclipse/detectorInefficientToArray=InefficientToArray|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorInfiniteLoop=InfiniteLoop|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorInfiniteRecursiveLoop=InfiniteRecursiveLoop|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorInheritanceUnsafeGetResource=InheritanceUnsafeGetResource|true
@@ -129,16 +129,18 @@
 /instance/com.github.spotbugs.plugin.eclipse/detectorUncallableMethodOfAnonymousClass=UncallableMethodOfAnonymousClass|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorUnnecessaryMath=UnnecessaryMath|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorUnreadFields=UnreadFields|true
-/instance/com.github.spotbugs.plugin.eclipse/detectorUselessSubclassMethod=UselessSubclassMethod|false
+/instance/com.github.spotbugs.plugin.eclipse/detectorUselessSubclassMethod=UselessSubclassMethod|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorVarArgsProblems=VarArgsProblems|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorVolatileUsage=VolatileUsage|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorWaitInLoop=WaitInLoop|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorWrongMapIterator=WrongMapIterator|true
 /instance/com.github.spotbugs.plugin.eclipse/detectorXMLFactoryBypass=XMLFactoryBypass|true
-/instance/com.github.spotbugs.plugin.eclipse/detector_threshold=3
+/instance/com.github.spotbugs.plugin.eclipse/detector_threshold=2
 /instance/com.github.spotbugs.plugin.eclipse/effort=default
-/instance/com.github.spotbugs.plugin.eclipse/filter_settings=Low|BAD_PRACTICE,CORRECTNESS,I18N,MALICIOUS_CODE,MT_CORRECTNESS,PERFORMANCE,SECURITY,STYLE|false|15
-/instance/com.github.spotbugs.plugin.eclipse/filter_settings_neg=EXPERIMENTAL,NOISE|
+/instance/com.github.spotbugs.plugin.eclipse/filter_settings=Medium|BAD_PRACTICE,CORRECTNESS,EXPERIMENTAL,I18N,MALICIOUS_CODE,MT_CORRECTNESS,PERFORMANCE,SECURITY,STYLE|false|20
+/instance/com.github.spotbugs.plugin.eclipse/filter_settings_neg=NOISE|
+/instance/com.github.spotbugs.plugin.eclipse/lastUsedGrouping=[Project, DetectorPlugin, Package, Class, Marker]
+/instance/com.github.spotbugs.plugin.eclipse/lastUsedWorkingSet=Aggregate\:main\:test\:
 /instance/com.github.spotbugs.plugin.eclipse/run_at_full_build=false
 @com.github.spotbugs.plugin.eclipse=3.1.6.r201807182348-e76b799
 file_export_version=3.0

@@ -3,10 +3,14 @@ package fr.houseofcode.dap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -37,6 +41,10 @@ import com.google.api.services.people.v1.model.Person;
  * @author djer
  */
 public final class QuickStartSample {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger();
     /**
      * Google application name.
      */
@@ -86,7 +94,7 @@ public final class QuickStartSample {
         // Load client secrets.
         final InputStream appClientSecret = QuickStartSample.class.getResourceAsStream(CLIENT_SECRET_FILE);
         final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-                new InputStreamReader(appClientSecret));
+                new InputStreamReader(appClientSecret, Charset.forName("UTF-8")));
 
         // Build flow and trigger user authorization request.
         final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
@@ -207,7 +215,9 @@ public final class QuickStartSample {
      * @return the listMessageResponse from the Google service;
      */
     private static ListMessagesResponse getMessages(final String user, final String nextPageToken) {
-        debug("Retrieving emails with page token : " + nextPageToken);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Retrieving emails with page token : " + nextPageToken);
+        }
         ListMessagesResponse listResponse = null;
         try {
             final Gmail service = getGmailService();
@@ -215,7 +225,7 @@ public final class QuickStartSample {
                     .setIncludeSpamTrash(Boolean.FALSE).setPageToken(nextPageToken).setMaxResults(MAX_EMAIL_PER_PAGES)
                     .execute();
         } catch (IOException | GeneralSecurityException e) {
-            error("Error while trying to get Gmail remote service with message : " + e.getMessage());
+            LOG.error("Error while trying to get Gmail remote service", e.getMessage());
         }
 
         return listResponse;
@@ -236,7 +246,7 @@ public final class QuickStartSample {
             final ListLabelsResponse listResponse = service.users().labels().list(user).execute();
             labels = listResponse.getLabels();
         } catch (IOException | GeneralSecurityException e) {
-            error("Error while trying to get Gmail remote service with message : " + e.getMessage());
+            LOG.error("Error while trying to get Gmail remote service", e.getMessage());
         }
 
         if (labels.isEmpty()) {
@@ -244,7 +254,7 @@ public final class QuickStartSample {
         } else {
             allLabels.append("Labels:");
             for (final Label label : labels) {
-                allLabels.append(String.format("- %s\n", label.getName()));
+                allLabels.append(String.format("- %s%n", label.getName()));
             }
         }
 
@@ -259,7 +269,8 @@ public final class QuickStartSample {
     private static String display(final Event event) {
         String eventText = "No Event";
         if (null != event) {
-            eventText = event.getSummary() + "[" + event.getStart() + "] " + getMyStatus(event);
+            eventText = new StringBuilder().append(event.getSummary()).append("[" + event.getStart()).append("] ")
+                    .append(getMyStatus(event)).toString();
         }
         return eventText;
     }
@@ -277,16 +288,23 @@ public final class QuickStartSample {
                 for (final EventAttendee attendee : event.getAttendees()) {
                     if (attendee.getEmail().equals(currentUser)) {
                         myStatus = attendee.getResponseStatus();
-                        debug("For Event : " + event.getSummary() + " current conencted user (" + currentUser
-                                + ") is attendee and has status : " + myStatus);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug(new StringBuilder().append("For Event : ").append(event.getSummary())
+                                    .append(" current conencted user (")
+                                    .append(currentUser).append(") is attendee and has status : ").append(myStatus)
+                                    .toString());
+                        }
                         break;
                     }
                 }
             } else if (null != event.getOrganizer()) {
                 if (event.getOrganizer().getEmail().equals(currentUser)) {
                     myStatus = "Organizer";
-                    debug("For Event : " + event.getSummary() + " current conencted user (" + currentUser
-                            + ") is organizer");
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(new StringBuilder().append("For Event : ").append(event.getSummary())
+                                .append(" current conencted user (").append(currentUser).append(") is organizer")
+                                .toString());
+                    }
                 }
             }
         }
@@ -314,10 +332,11 @@ public final class QuickStartSample {
                 }
             }
         } catch (GeneralSecurityException | IOException e) {
-            error("Error while trying to get Peopole remote service with message : " + e.getMessage());
+            LOG.error("Error while trying to get Peopole remote service", e.getMessage());
         }
-
-        debug("current connected account user email adress : " + userEmail);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("current connected account user email adress : " + userEmail);
+        }
 
         return userEmail;
     }
@@ -340,25 +359,9 @@ public final class QuickStartSample {
             final List<Event> items = events.getItems();
             nextEvent = items.get(0);
         } catch (GeneralSecurityException | IOException e) {
-            error("Error while trying to get Calendar remote service with message : " + e.getMessage());
+            LOG.error("Error while trying to get Calendar remote service", e.getMessage());
         }
         return nextEvent;
-    }
-
-    /**
-     * Basic Logging, print the debug in the standard output stream.
-     * @param message debug message
-     */
-    private static void debug(final String message) {
-        System.out.println("DEBUG : " + message);
-    }
-
-    /**
-     * Basic Logging, print the error in the standard error stream.
-     * @param message error message
-     */
-    private static void error(final String message) {
-        System.err.println("ERROR : " + message);
     }
 
     /**

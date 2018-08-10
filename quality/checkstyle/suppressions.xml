@@ -6,6 +6,7 @@
 
 <suppressions>
     <!-- No package-info on test, the package-info should be in src/main/java source folder -->
-    <suppress checks="JavadocPackage" files="src[/\\][/\\]]test[/\\]java[/\\].*Test.*" />
+    <suppress checks="JavadocPackage" files=".*Test\.java" /><!-- src[/\\][/\\]]test[/\\]java[/\\].*Test.*\.java -->
+    <suppress files="[/\\]target[/\\]" checks=".*"/>
 </suppressions>
 
