@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Custom ruleset" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        This ruleset checks my code for bad stuff
+    </description>
+
+	<!-- Here's some rules we'll specify one at a time -->
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable" />
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField" />
+    <rule ref="category/java/codestyle.xml/DuplicateImports" />
+    <rule ref="category/java/errorprone.xml/UnnecessaryConversionTemporary" />
+
+	<!-- We want to customize this rule a bit, change the message and raise the priority  -->
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock" message="Must handle exceptions">
+        <priority>2</priority>
+    </rule>
+
+	<!-- Now we'll customize a rule's property value -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="40" />
+            <property name="methodReportLevel" value="5" />
+        </properties>
+    </rule>
+
+	<!-- We want everything from category Code Style except WhileLoopsMustUseBraces -->
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="WhileLoopsMustUseBraces" />
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="30"/>
+        </properties>
+    </rule>
+</ruleset>

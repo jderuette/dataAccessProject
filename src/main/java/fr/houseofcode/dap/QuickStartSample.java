@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.houseofcode.dap;
 
 import java.io.IOException;
@@ -38,14 +35,22 @@ import com.google.api.services.people.v1.model.Person;
 
 /**
  * @author djer
- *
  */
-public class QuickStartSample {
+public final class QuickStartSample {
+    /**
+     * Google application name.
+     */
     private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
+    /**
+     * JsonFactory to marshal/unMarshall Google messages.
+     */
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String CREDENTIALS_FOLDER = System.getProperty("user.home")
-            + "/houseOfCode" + System.getProperty("file.separator") + "dataAccessProject"
-            + System.getProperty("file.separator") + "googleCredentials"; // Directory to store user credentials.
+    /**
+     * Folder to Store DataAccesProject user Google credentials.
+     */
+    private static final String CREDENTIALS_FOLDER = System.getProperty("user.home") + "/houseOfCode"
+            + System.getProperty("file.separator") + "dataAccessProject" + System.getProperty("file.separator")
+            + "googleCredentials"; // Directory to store user credentials.
 
     /**
      * Global instance of the scopes required by this quickstart. If modifying these
@@ -54,22 +59,37 @@ public class QuickStartSample {
     private static final List<String> SCOPES = Arrays.asList(GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_READONLY,
             CalendarScopes.CALENDAR_READONLY, "https://www.googleapis.com/auth/plus.login ",
             "https://www.googleapis.com/auth/userinfo.email");
-            
+
+    /**
+     * Application credential file.
+     */
     private static final String CLIENT_SECRET_FILE = "/data/credentials.json";
 
     /**
+     * Maximum number of message (email) per page from Google Email Service.
+     */
+    private static final Long MAX_EMAIL_PER_PAGES = 1000L;
+
+    /**
+     * Utility Class.
+     */
+    private QuickStartSample() {
+        throw new UnsupportedOperationException("Utility Class");
+    }
+    /**
      * Creates an authorized Credential object.
-     * @param HTTP_TRANSPORT The network HTTP Transport.
+     * @param httpTransport The network HTTP Transport.
      * @return An authorized Credential object.
      * @throws IOException If there is no client_secret.
      */
-    private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    private static Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
         // Load client secrets.
-        InputStream in = QuickStartSample.class.getResourceAsStream(CLIENT_SECRET_FILE);
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+        final InputStream appClientSecret = QuickStartSample.class.getResourceAsStream(CLIENT_SECRET_FILE);
+        final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+                new InputStreamReader(appClientSecret));
 
         // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+        final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
                 clientSecrets, SCOPES)
                         .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(CREDENTIALS_FOLDER)))
                         .setAccessType("offline").build();
@@ -77,38 +97,56 @@ public class QuickStartSample {
     }
 
     /**
-     * Build a new Gmail remote service
+     * Build a new Gmail remote service.
      * @return the Gmail Service
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
      */
     private static Gmail getGmailService() throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        final Gmail service = new Gmail.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
                 .setApplicationName(APPLICATION_NAME).build();
 
         return service;
     }
 
+    /**
+     * Build a new Google Calendar Service.
+     * @return the Google Calendar service
+     * @throws GeneralSecurityException general Google security errors
+     * @throws IOException              a general error (network, fileSystem, ...)
+     */
     private static Calendar getCalendarService() throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        final Calendar service = new Calendar.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
                 .setApplicationName(APPLICATION_NAME).build();
 
         return service;
     }
 
+    /**
+     * Build a new Google People Service.
+     * @return the Google people service
+     * @throws GeneralSecurityException general Google security errors
+     * @throws IOException              a general error (network, fileSystem, ...)
+     */
     private static PeopleService getPeopoleService() throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        PeopleService peopleService = new PeopleService.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-                getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
+        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        final PeopleService peopleService = new PeopleService.Builder(httpTransport, JSON_FACTORY,
+                getCredentials(httpTransport)).setApplicationName(APPLICATION_NAME).build();
 
         return peopleService;
     }
 
-    public static void main(String... args) throws IOException, GeneralSecurityException {
-        String user = "me";
+    /**
+     * The main entry Point (from Google Sample, should be refactored).
+     * @param args application agrs
+     * @throws IOException              a general error (network, fileSystem, ...)
+     * @throws GeneralSecurityException general Google security errors
+     */
+    public static void main(final String... args) throws IOException, GeneralSecurityException {
+        final String user = "me";
 
         userMessage(getInboxLabels(user));
         userMessage("Nb Emails : " + getNbUnreadEmail(user));
@@ -116,11 +154,24 @@ public class QuickStartSample {
         userMessage("Prochain evennement : " + display(getNextEvent(user)));
     }
 
-    private static String getNbUnreadEmail(String user) {
+    /**
+     * Retrieve the Number of Email for a user.
+     * @param user The user ID or "me"
+     * @return The number of unread email in his mail box
+     */
+    private static String getNbUnreadEmail(final String user) {
         return String.valueOf(getNbUnreadEmail(user, null));
     }
 
-    private static Integer getNbUnreadEmail(String user, String nextPageToken) {
+    /**
+     * Retrieve the Number of Email for a user from a specific page Token.
+     * @param user          The user ID or "me"
+     * @param nextPageToken The "next page token" received from the previous call.
+     *                      NULL for the first call.
+     * @return The number of unread email in his mail box from this page. Recursive
+     *         so ALL pages are traversed FROM nextPageToken.
+     */
+    private static Integer getNbUnreadEmail(final String user, final String nextPageToken) {
         Integer nbEmail = 0;
         ListMessagesResponse listMessagesResponse = getMessages(user, nextPageToken);
 
@@ -136,7 +187,12 @@ public class QuickStartSample {
         return nbEmail;
     }
 
-    private static Integer countNbMessage(ListMessagesResponse listMessagesResponse) {
+    /**
+     * Count the number of message from a Google MessageListResponse.
+     * @param listMessagesResponse list of message from the Google Service
+     * @return the number of message on this list.
+     */
+    private static Integer countNbMessage(final ListMessagesResponse listMessagesResponse) {
         int nbEmail = 0;
         if (null != listMessagesResponse) {
             nbEmail = listMessagesResponse.getMessages().size();
@@ -144,51 +200,63 @@ public class QuickStartSample {
         return nbEmail;
     }
 
-    private static ListMessagesResponse getMessages(String user, String nextPageToken) {
+    /**
+     * Get a list of message (email) from Google.
+     * @param user          The user ID or "me"
+     * @param nextPageToken The "next page token" received from the previous call.
+     * @return the listMessageResponse from the Google service;
+     */
+    private static ListMessagesResponse getMessages(final String user, final String nextPageToken) {
         debug("Retrieving emails with page token : " + nextPageToken);
         ListMessagesResponse listResponse = null;
         try {
-            Gmail service = getGmailService();
+            final Gmail service = getGmailService();
             listResponse = service.users().messages().list(user).setLabelIds(Arrays.asList("INBOX", "UNREAD"))
-                    .setIncludeSpamTrash(Boolean.FALSE)
-                    .setPageToken(nextPageToken).setMaxResults(1000l).execute();
-        } catch (IOException ioe) {
-            error("Error while trying to get Gmail remote service with message : " + ioe.getMessage());
-        } catch (GeneralSecurityException gse) {
-            error("Error while trying to get Gmail remote service with message : " + gse.getMessage());
+                    .setIncludeSpamTrash(Boolean.FALSE).setPageToken(nextPageToken).setMaxResults(MAX_EMAIL_PER_PAGES)
+                    .execute();
+        } catch (IOException | GeneralSecurityException e) {
+            error("Error while trying to get Gmail remote service with message : " + e.getMessage());
         }
 
         return listResponse;
     }
 
-    private static String getInboxLabels(String user) {
-        StringBuilder allLabels = new StringBuilder();
+    /**
+     * retrieve all label from a Google Account.
+     * @param user The user ID or "me"
+     * @return a string representation of all labels
+     */
+    private static String getInboxLabels(final String user) {
+        final StringBuilder allLabels = new StringBuilder();
 
         List<Label> labels = new ArrayList<Label>();
 
         try {
-            Gmail service = getGmailService();
-            ListLabelsResponse listResponse = service.users().labels().list(user).execute();
+            final Gmail service = getGmailService();
+            final ListLabelsResponse listResponse = service.users().labels().list(user).execute();
             labels = listResponse.getLabels();
-        } catch (IOException ioe) {
-            error("Error while trying to get Gmail remote service with message : " + ioe.getMessage());
-        } catch (GeneralSecurityException gse) {
-            error("Error while trying to get Gmail remote service with message : " + gse.getMessage());
+        } catch (IOException | GeneralSecurityException e) {
+            error("Error while trying to get Gmail remote service with message : " + e.getMessage());
         }
-        
+
         if (labels.isEmpty()) {
             allLabels.append("No labels found.");
         } else {
             allLabels.append("Labels:");
-            for (Label label : labels) {
-                allLabels.append((String.format("- %s\n", label.getName())));
+            for (final Label label : labels) {
+                allLabels.append(String.format("- %s\n", label.getName()));
             }
         }
-        
+
         return allLabels.toString();
     }
 
-    private static String display(Event event) {
+    /**
+     * Display an event as simple string for user.
+     * @param event The event to display
+     * @return A simple string representation of the event
+     */
+    private static String display(final Event event) {
         String eventText = "No Event";
         if (null != event) {
             eventText = event.getSummary() + "[" + event.getStart() + "] " + getMyStatus(event);
@@ -196,23 +264,28 @@ public class QuickStartSample {
         return eventText;
     }
 
-    private static String getMyStatus(Event event) {
+    /**
+     * Get the "status" for the Event for the current connected user.
+     * @param event the event to search for status of current user.
+     * @return A string representation of the user status
+     */
+    private static String getMyStatus(final Event event) {
         String myStatus = "unknow";
         if (null != event) {
-            String currentConnectedUser = getCurrentConnectedUserEmail();
+            final String currentUser = getCurrentConnectedUserEmail();
             if (null != event.getAttendees() && event.getAttendees().size() > 0) {
-                for (EventAttendee attendee : event.getAttendees()) {
-                    if (attendee.getEmail().equals(currentConnectedUser)) {
+                for (final EventAttendee attendee : event.getAttendees()) {
+                    if (attendee.getEmail().equals(currentUser)) {
                         myStatus = attendee.getResponseStatus();
-                        debug("For Event : " + event.getSummary() + " current conencted user (" + currentConnectedUser
+                        debug("For Event : " + event.getSummary() + " current conencted user (" + currentUser
                                 + ") is attendee and has status : " + myStatus);
                         break;
                     }
                 }
             } else if (null != event.getOrganizer()) {
-                if (event.getOrganizer().getEmail().equals(currentConnectedUser)) {
+                if (event.getOrganizer().getEmail().equals(currentUser)) {
                     myStatus = "Organizer";
-                    debug("For Event : " + event.getSummary() + " current conencted user (" + currentConnectedUser
+                    debug("For Event : " + event.getSummary() + " current conencted user (" + currentUser
                             + ") is organizer");
                 }
             }
@@ -220,15 +293,19 @@ public class QuickStartSample {
         return myStatus;
     }
 
+    /**
+     * Try to get the email address of the current connected User.
+     * @return Email address of the current connected user
+     */
     private static String getCurrentConnectedUserEmail() {
         String userEmail = null;
         try {
-            PeopleService servcie = getPeopoleService();
-            Person profile = servcie.people().get("people/me").setPersonFields("emailAddresses").execute();
+            final PeopleService servcie = getPeopoleService();
+            final Person profile = servcie.people().get("people/me").setPersonFields("emailAddresses").execute();
 
-            List<EmailAddress> emailsAdresses = profile.getEmailAddresses();
+            final List<EmailAddress> emailsAdresses = profile.getEmailAddresses();
             if (null != emailsAdresses && emailsAdresses.size() > 0) {
-                for (EmailAddress email : emailsAdresses) {
+                for (final EmailAddress email : emailsAdresses) {
                     if (null != email.getMetadata() && email.getMetadata().getPrimary()
                             || null != email.getType() && email.getType().equals("account")) {
                         userEmail = email.getValue();
@@ -236,10 +313,8 @@ public class QuickStartSample {
                     }
                 }
             }
-        } catch (GeneralSecurityException ioe) {
-            error("Error while trying to get Peopole remote service with message : " + ioe.getMessage());
-        } catch (IOException gse) {
-            error("Error while trying to get Peopole remote service with message : " + gse.getMessage());
+        } catch (GeneralSecurityException | IOException e) {
+            error("Error while trying to get Peopole remote service with message : " + e.getMessage());
         }
 
         debug("current connected account user email adress : " + userEmail);
@@ -247,34 +322,50 @@ public class QuickStartSample {
         return userEmail;
     }
 
-    private static Event getNextEvent(String user) {
+    /**
+     * Retrieve the next Event in the user calendars.
+     * @param user user Id or "me"
+     * @return the next Google Event.
+     */
+    private static Event getNextEvent(final String user) {
         Event nextEvent = null;
-        DateTime now = new DateTime(System.currentTimeMillis());
+        final DateTime now = new DateTime(System.currentTimeMillis());
 
         Calendar service;
         try {
             service = getCalendarService();
-            Events events = service.events().list("primary").setMaxResults(1).setTimeMin(now).setOrderBy("startTime")
+            final Events events = service.events().list("primary").setMaxResults(1).setTimeMin(now)
+                    .setOrderBy("startTime")
                     .setSingleEvents(true).execute();
-            List<Event> items = events.getItems();
+            final List<Event> items = events.getItems();
             nextEvent = items.get(0);
-        } catch (GeneralSecurityException ioe) {
-            error("Error while trying to get Calendar remote service with message : " + ioe.getMessage());
-        } catch (IOException gse) {
-            error("Error while trying to get Calendar remote service with message : " + gse.getMessage());
+        } catch (GeneralSecurityException | IOException e) {
+            error("Error while trying to get Calendar remote service with message : " + e.getMessage());
         }
         return nextEvent;
     }
 
-    private static void debug(String message) {
+    /**
+     * Basic Logging, print the debug in the standard output stream.
+     * @param message debug message
+     */
+    private static void debug(final String message) {
         System.out.println("DEBUG : " + message);
     }
 
-    private static void error(String message) {
+    /**
+     * Basic Logging, print the error in the standard error stream.
+     * @param message error message
+     */
+    private static void error(final String message) {
         System.err.println("ERROR : " + message);
     }
 
-    private static void userMessage(String message) {
+    /**
+     * Display a message to the user.
+     * @param message Message to display to the user.
+     */
+    private static void userMessage(final String message) {
         System.out.println(message);
     }
 
