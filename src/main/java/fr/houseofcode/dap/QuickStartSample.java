@@ -1,9 +1,13 @@
 package fr.houseofcode.dap;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystemNotFoundException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +75,9 @@ public final class QuickStartSample {
     /**
      * Application credential file.
      */
-    private static final String CLIENT_SECRET_FILE = "/data/credentials.json";
+    private static final String CLIENT_SECRET_FILE = System.getProperty("user.home") + "/houseOfCode"
+            + System.getProperty("file.separator") + "dataAccessProject" + System.getProperty("file.separator")
+            + "credentials.json";
 
     /**
      * Maximum number of message (email) per page from Google Email Service.
@@ -92,14 +98,33 @@ public final class QuickStartSample {
      */
     private static Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
         // Load client secrets.
-        final InputStream appClientSecret = QuickStartSample.class.getResourceAsStream(CLIENT_SECRET_FILE);
+        Reader appClientSecret = null;
+        final File appClientSecretFile = new File(CLIENT_SECRET_FILE);
+        if (appClientSecretFile.exists()) {
+            appClientSecret = new InputStreamReader(new FileInputStream(appClientSecretFile), Charset.forName("UTF-8"));
+        } else {
+            // try with app local data (not recommended to store this file in public
+            // repository)
+            final InputStream appClientSecretStream = QuickStartSample.class.getResourceAsStream(CLIENT_SECRET_FILE);
+            if (null != appClientSecretStream) {
+                appClientSecret = new InputStreamReader(appClientSecretStream, Charset.forName("UTF-8"));
+            }
+        }
+
+        if (null == appClientSecret) {
+            final String message = "No AppCredentialFile to connect to Google App. This file should be in : "
+                    + CLIENT_SECRET_FILE;
+            LOG.error(message);
+            throw new FileSystemNotFoundException(message);
+        }
+
         final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-                new InputStreamReader(appClientSecret, Charset.forName("UTF-8")));
+                appClientSecret);
 
         // Build flow and trigger user authorization request.
         final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
                 clientSecrets, SCOPES)
-                        .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(CREDENTIALS_FOLDER)))
+                        .setDataStoreFactory(new FileDataStoreFactory(new File(CREDENTIALS_FOLDER)))
                         .setAccessType("offline").build();
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     }
