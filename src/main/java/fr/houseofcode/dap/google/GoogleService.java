@@ -23,7 +23,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 
 import fr.houseofcode.dap.Config;
-import fr.houseofcode.dap.QuickStartSample;
+import fr.houseofcode.dap.GoogleFacade;
 
 /**
  * @author djer
@@ -73,7 +73,7 @@ public abstract class GoogleService {
         } else {
             // try with app local data (not recommended to store this file in public
             // repository)
-            final InputStream appClientSecretStream = QuickStartSample.class
+            final InputStream appClientSecretStream = GoogleFacade.class
                     .getResourceAsStream(configuration.getClientSecretFile());
             if (null != appClientSecretStream) {
                 appClientSecret = new InputStreamReader(appClientSecretStream, Charset.forName("UTF-8"));

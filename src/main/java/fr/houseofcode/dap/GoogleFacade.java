@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.gmail.model.Label;
@@ -18,19 +20,21 @@ import fr.houseofcode.dap.google.GmailService;
 /**
  * @author djer
  */
-public class QuickStartSample {
+@Service
+public class GoogleFacade {
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger();
 
     /** Application Configuration. */
+    @Autowired
     private Config configuration;
 
     /**
      * Load with a default configuration.
      */
-    public QuickStartSample() {
+    public GoogleFacade() {
         this.configuration = new Config();
     }
 
@@ -38,7 +42,7 @@ public class QuickStartSample {
      * Load with a App specific configuration.
      * @param config Application Configuration
      */
-    public QuickStartSample(final Config config) {
+    public GoogleFacade(final Config config) {
         this.configuration = config;
     }
 
@@ -63,7 +67,7 @@ public class QuickStartSample {
      * @param user The user ID or "me"
      * @return The number of unread email in his mail box
      */
-    private String getNbUnreadEmail(final String user) {
+    public String getNbUnreadEmail(final String user) {
         return String.valueOf(getNbUnreadEmail(user, null));
     }
 
@@ -99,7 +103,7 @@ public class QuickStartSample {
      * @param user The user ID or "me"
      * @return a string representation of all labels
      */
-    private String buildInboxLabels(final String user) {
+    public String buildInboxLabels(final String user) {
         final StringBuilder allLabels = new StringBuilder();
         final GmailService service = new GmailService(configuration);
 
@@ -124,7 +128,7 @@ public class QuickStartSample {
      * @param event The event to display
      * @return A simple string representation of the event
      */
-    private String display(final Event event) {
+    public String display(final Event event) {
         String eventText = "No Event";
         if (null != event) {
             final CalendarService service = new CalendarService(configuration);
@@ -140,7 +144,7 @@ public class QuickStartSample {
      * @param user user Id or "me"
      * @return the next Google Event.
      */
-    private Event getNextEvent(final String user) {
+    public Event getNextEvent(final String user) {
         final CalendarService service = new CalendarService(configuration);
         return service.getNextEvent(user);
     }
@@ -153,4 +157,10 @@ public class QuickStartSample {
         System.out.println(message);
     }
 
+    /**
+     * @param config the configuration to set
+     */
+    public final void setConfiguration(final Config config) {
+        this.configuration = config;
+    }
 }

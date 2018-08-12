@@ -3,9 +3,12 @@
  */
 package fr.houseofcode.dap;
 
+import org.springframework.context.annotation.Configuration;
+
 /**
  * @author djer
  */
+@Configuration
 public class Config {
     /** Default application name. */
     private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
@@ -43,8 +46,7 @@ public class Config {
      */
     public Config(final String directoryDataStore) {
         this();
-        this.credentialFolder = directoryDataStore + System.getProperty("file.separator") + "googleCredentials";
-        this.clientSecretFile = directoryDataStore + System.getProperty("file.separator") + "credentials.json";
+        init(directoryDataStore);
     }
 
     /**
@@ -53,7 +55,27 @@ public class Config {
      * @param appName            the specific application name
      */
     public Config(final String directoryDataStore, final String appName) {
-        this(directoryDataStore);
+        this();
+        init(directoryDataStore, appName);
+    }
+
+    /**
+     * Initialize the configuration with specific data Folder.
+     * @param directoryDataStore root data Store
+     */
+    public void init(final String directoryDataStore) {
+        this.credentialFolder = directoryDataStore + System.getProperty("file.separator") + "googleCredentials";
+        this.clientSecretFile = directoryDataStore + System.getProperty("file.separator") + "credentials.json";
+    }
+
+    /**
+     * Initialize the configuration with specific data Folder and an Application
+     * name.
+     * @param directoryDataStore root data Store
+     * @param appName            application name
+     */
+    public void init(final String directoryDataStore, final String appName) {
+        init(directoryDataStore);
         this.applicationName = appName;
     }
 

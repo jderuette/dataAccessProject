@@ -3,16 +3,41 @@ package fr.houseofcode.dap;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+
 /**
  * Hello world!
  */
-public final class AppLauncher {
+@SpringBootApplication
+public class AppLauncher {
+
+    /** Application configuration. */
+    @Autowired
+    private Config configuration;
+
     /**
-     * Utility CLass.
+     * Launcher for command line.
+     * @param ctx the context
+     * @return the CommandLine runner
      */
-    private AppLauncher() {
-        throw new UnsupportedOperationException("Utility Class");
+    @Bean
+    public CommandLineRunner commandLineRunner(final ApplicationContext ctx) {
+        return args -> {
+
+            configuration.init(System.getProperty("user.home") + System.getProperty("file.separator") + "houseOfCode"
+                    + System.getProperty("file.separator") + "dataAccessProject", "Djer Data Access Project");
+
+            final GoogleFacade app = new GoogleFacade(configuration);
+            app.display("me");
+
+        };
     }
+
     /**
      * Main entry point.
      * @param args user parameters
@@ -20,9 +45,6 @@ public final class AppLauncher {
      * @throws GeneralSecurityException Google error
      */
     public static void main(final String[] args) throws IOException, GeneralSecurityException {
-        final Config configuration = new Config(System.getProperty("user.home") + System.getProperty("file.separator")
-                + "houseOfCode" + System.getProperty("file.separator") + "dataAccessProject");
-        final QuickStartSample app = new QuickStartSample(configuration);
-        app.display("me");
+        SpringApplication.run(AppLauncher.class, args);
     }
 }
