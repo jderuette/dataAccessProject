@@ -20,7 +20,9 @@ public final class AppLauncher {
      * @throws GeneralSecurityException Google error
      */
     public static void main(final String[] args) throws IOException, GeneralSecurityException {
-        final QuickStartSample app = new QuickStartSample();
+        final Config configuration = new Config(System.getProperty("user.home") + System.getProperty("file.separator")
+                + "houseOfCode" + System.getProperty("file.separator") + "dataAccessProject");
+        final QuickStartSample app = new QuickStartSample(configuration);
         app.display("me");
     }
 }

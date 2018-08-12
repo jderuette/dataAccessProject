@@ -10,8 +10,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.Events;
 
 import fr.houseofcode.dap.Config;
 
@@ -52,6 +56,91 @@ public class CalendarService extends GoogleService {
                 getCredentials(httpTransport)).setApplicationName(getConfiguration().getApplicationName()).build();
 
         return service;
+    }
+
+    /**
+     * Get the Google Events.
+     * @param from      search events after this dataTime
+     * @param maxResult maximum number of result to retrieve
+     * @return a Google Events (containing found events)
+     */
+    public Events getEvents(final DateTime from, final Integer maxResult) {
+        Events events = new Events();
+
+        Calendar service;
+        try {
+            service = getCalendarService();
+            events = service.events().list("primary").setMaxResults(maxResult).setTimeMin(from)
+                    .setOrderBy("startTime").setSingleEvents(true).execute();
+        } catch (GeneralSecurityException | IOException e) {
+            LOG.error("Error while trying to get Calendar remote service", e.getMessage());
+        }
+
+        return events;
+    }
+
+    /**
+     * Retrieve the next Event in the user calendars.
+     * @param user user Id or "me"
+     * @return the next Google Event.
+     */
+    public Event getNextEvent(final String user) {
+
+        Event nextEvent = null;
+        final DateTime now = new DateTime(System.currentTimeMillis());
+        final Events events = getEvents(now, 1);
+        final List<Event> items = events.getItems();
+        nextEvent = items.get(0);
+        return nextEvent;
+    }
+
+    /**
+     * Get the "status" for the Event for the current connected user.
+     * @param event the event to search for status of current user.
+     * @return A string representation of the user status
+     */
+    public String getMyStatus(final Event event) {
+        String myStatus = "unknow";
+        if (null != event) {
+            final AppPeopleService peopleService = new AppPeopleService(getConfiguration());
+            final String currentUser = peopleService.getCurrentConnectedUserEmail();
+            myStatus = getstatus(event, currentUser);
+        }
+        return myStatus;
+    }
+
+    /**
+     * Search the user (by Email) status in the event.
+     * @param event     the event to scan
+     * @param userEmail the user Email to search status for
+     * @return the user status (or "unknow" if not found)
+     */
+    public static String getstatus(final Event event, final String userEmail) {
+        String myStatus = "unknow";
+        if (null != event.getAttendees() && event.getAttendees().size() > 0) {
+            for (final EventAttendee attendee : event.getAttendees()) {
+                if (attendee.getEmail().equals(userEmail)) {
+                    myStatus = attendee.getResponseStatus();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(new StringBuilder().append("For Event : ").append(event.getSummary())
+                                .append(" current conencted user (").append(userEmail)
+                                .append(") is attendee and has status : ").append(myStatus).toString());
+                    }
+                    break;
+                }
+            }
+        } else if (null != event.getOrganizer()) {
+            if (event.getOrganizer().getEmail().equals(userEmail)) {
+                myStatus = "Organizer";
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(new StringBuilder().append("For Event : ").append(event.getSummary())
+                            .append(" current conencted user (").append(userEmail).append(") is organizer")
+                            .toString());
+                }
+            }
+        }
+        return myStatus;
+
     }
 
     /* (non-Javadoc)

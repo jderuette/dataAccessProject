@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.services.people.v1.PeopleService;
+import com.google.api.services.people.v1.model.EmailAddress;
+import com.google.api.services.people.v1.model.Person;
 
 import fr.houseofcode.dap.Config;
 
@@ -52,6 +54,47 @@ public class AppPeopleService extends GoogleService {
                 getCredentials(httpTransport)).setApplicationName(getConfiguration().getApplicationName()).build();
 
         return peopleService;
+    }
+
+    /**
+     * Retrieve the current connected User Person information.
+     * @return a Google Person
+     */
+    private Person getMe() {
+        Person profile = new Person();
+        try {
+            final PeopleService servcie = getPeopoleService();
+            profile = servcie.people().get("people/me").setPersonFields("emailAddresses").execute();
+        } catch (GeneralSecurityException | IOException e) {
+            LOG.error("Error while trying to get Peopole remote service", e.getMessage());
+        }
+
+        return profile;
+    }
+
+    /**
+     * Try to get the email address of the current connected User.
+     * @return Email address of the current connected user
+     */
+    public String getCurrentConnectedUserEmail() {
+        String userEmail = null;
+        final Person mySelf = getMe();
+
+            final List<EmailAddress> emailsAdresses = mySelf.getEmailAddresses();
+            if (null != emailsAdresses && emailsAdresses.size() > 0) {
+                for (final EmailAddress email : emailsAdresses) {
+                    if (null != email.getMetadata() && email.getMetadata().getPrimary()
+                            || null != email.getType() && email.getType().equals("account")) {
+                        userEmail = email.getValue();
+                        break;
+                    }
+                }
+            }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("current connected account user email adress : " + userEmail);
+        }
+
+        return userEmail;
     }
 
     /* (non-Javadoc)
