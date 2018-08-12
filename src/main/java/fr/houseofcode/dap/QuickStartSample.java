@@ -49,20 +49,12 @@ public final class QuickStartSample {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger();
-    /**
-     * Google application name.
-     */
-    private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
+
     /**
      * JsonFactory to marshal/unMarshall Google messages.
      */
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    /**
-     * Folder to Store DataAccesProject user Google credentials.
-     */
-    private static final String CREDENTIALS_FOLDER = System.getProperty("user.home") + "/houseOfCode"
-            + System.getProperty("file.separator") + "dataAccessProject" + System.getProperty("file.separator")
-            + "googleCredentials"; // Directory to store user credentials.
+
 
     /**
      * Global instance of the scopes required by this quickstart. If modifying these
@@ -73,16 +65,13 @@ public final class QuickStartSample {
             "https://www.googleapis.com/auth/userinfo.email");
 
     /**
-     * Application credential file.
-     */
-    private static final String CLIENT_SECRET_FILE = System.getProperty("user.home") + "/houseOfCode"
-            + System.getProperty("file.separator") + "dataAccessProject" + System.getProperty("file.separator")
-            + "credentials.json";
-
-    /**
      * Maximum number of message (email) per page from Google Email Service.
      */
     private static final Long MAX_EMAIL_PER_PAGES = 1000L;
+    /** Application Configuration. */
+    private static Config configuration = new Config(
+            System.getProperty("user.home") + System.getProperty("file.separator") + "houseOfCode"
+                    + System.getProperty("file.separator") + "dataAccessProject");
 
     /**
      * Utility Class.
@@ -99,13 +88,14 @@ public final class QuickStartSample {
     private static Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
         // Load client secrets.
         Reader appClientSecret = null;
-        final File appClientSecretFile = new File(CLIENT_SECRET_FILE);
+        final File appClientSecretFile = new File(configuration.getClientSecretFile());
         if (appClientSecretFile.exists()) {
             appClientSecret = new InputStreamReader(new FileInputStream(appClientSecretFile), Charset.forName("UTF-8"));
         } else {
             // try with app local data (not recommended to store this file in public
             // repository)
-            final InputStream appClientSecretStream = QuickStartSample.class.getResourceAsStream(CLIENT_SECRET_FILE);
+            final InputStream appClientSecretStream = QuickStartSample.class
+                    .getResourceAsStream(configuration.getClientSecretFile());
             if (null != appClientSecretStream) {
                 appClientSecret = new InputStreamReader(appClientSecretStream, Charset.forName("UTF-8"));
             }
@@ -113,7 +103,7 @@ public final class QuickStartSample {
 
         if (null == appClientSecret) {
             final String message = "No AppCredentialFile to connect to Google App. This file should be in : "
-                    + CLIENT_SECRET_FILE;
+                    + configuration.getClientSecretFile();
             LOG.error(message);
             throw new FileSystemNotFoundException(message);
         }
@@ -124,7 +114,7 @@ public final class QuickStartSample {
         // Build flow and trigger user authorization request.
         final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
                 clientSecrets, SCOPES)
-                        .setDataStoreFactory(new FileDataStoreFactory(new File(CREDENTIALS_FOLDER)))
+                        .setDataStoreFactory(new FileDataStoreFactory(new File(configuration.getCredentialFolder())))
                         .setAccessType("offline").build();
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     }
@@ -139,7 +129,7 @@ public final class QuickStartSample {
         // Build a new authorized API client service.
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         final Gmail service = new Gmail.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
-                .setApplicationName(APPLICATION_NAME).build();
+                .setApplicationName(configuration.getApplicationName()).build();
 
         return service;
     }
@@ -153,7 +143,7 @@ public final class QuickStartSample {
     private static Calendar getCalendarService() throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         final Calendar service = new Calendar.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
-                .setApplicationName(APPLICATION_NAME).build();
+                .setApplicationName(configuration.getApplicationName()).build();
 
         return service;
     }
@@ -167,7 +157,7 @@ public final class QuickStartSample {
     private static PeopleService getPeopoleService() throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         final PeopleService peopleService = new PeopleService.Builder(httpTransport, JSON_FACTORY,
-                getCredentials(httpTransport)).setApplicationName(APPLICATION_NAME).build();
+                getCredentials(httpTransport)).setApplicationName(configuration.getApplicationName()).build();
 
         return peopleService;
     }
