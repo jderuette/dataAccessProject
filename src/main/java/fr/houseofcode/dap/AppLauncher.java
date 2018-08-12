@@ -11,7 +11,7 @@ public final class AppLauncher {
      * Utility CLass.
      */
     private AppLauncher() {
-        throw new UnsupportedOperationException("utility Class");
+        throw new UnsupportedOperationException("Utility Class");
     }
     /**
      * Main entry point.
@@ -20,6 +20,7 @@ public final class AppLauncher {
      * @throws GeneralSecurityException Google error
      */
     public static void main(final String[] args) throws IOException, GeneralSecurityException {
-        QuickStartSample.main(args);
+        final QuickStartSample app = new QuickStartSample();
+        app.display("me");
     }
 }
