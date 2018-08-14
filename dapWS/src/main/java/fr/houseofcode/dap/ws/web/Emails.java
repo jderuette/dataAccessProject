@@ -1,11 +1,11 @@
-package fr.houseofcode.dap.web;
+package fr.houseofcode.dap.ws.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.houseofcode.dap.GoogleFacade;
+import fr.houseofcode.dap.ws.GoogleFacade;
 
 /**
  * @author djer

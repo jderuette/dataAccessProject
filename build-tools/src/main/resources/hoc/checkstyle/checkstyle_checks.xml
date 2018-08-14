@@ -9,7 +9,7 @@
     <property name="fileExtensions" value="java, properties, xml" />
 
     <module name="SuppressionFilter">
-        <property name="file" value="${basedir}/quality/checkstyle/suppressions.xml"/>
+        <property name="file" value="${basedir}/hoc/checkstyle/suppressions.xml"/>
 
         <!-- "file" define : 
         - in elcipse using window->preference->checkstyle->[select a conf]->properties->additional properties 

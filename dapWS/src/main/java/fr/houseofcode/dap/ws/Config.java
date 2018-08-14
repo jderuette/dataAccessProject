@@ -1,7 +1,7 @@
 /**
  * Class to store application, specific configuration;
  */
-package fr.houseofcode.dap;
+package fr.houseofcode.dap.ws;
 
 import org.springframework.context.annotation.Configuration;
 

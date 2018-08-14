@@ -6,4 +6,4 @@
  * @author djer
  *
  */
-package fr.houseofcode.dap;
+package fr.houseofcode.dap.ws;

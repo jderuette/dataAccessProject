@@ -1,4 +1,4 @@
-package fr.houseofcode.dap.google;
+package fr.houseofcode.dap.ws.google;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -17,7 +17,7 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.Events;
 
-import fr.houseofcode.dap.Config;
+import fr.houseofcode.dap.ws.Config;
 
 /**
  * @author djer

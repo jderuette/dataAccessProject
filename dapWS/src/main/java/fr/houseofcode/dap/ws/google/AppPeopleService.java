@@ -1,4 +1,4 @@
-package fr.houseofcode.dap.google;
+package fr.houseofcode.dap.ws.google;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -14,7 +14,7 @@ import com.google.api.services.people.v1.PeopleService;
 import com.google.api.services.people.v1.model.EmailAddress;
 import com.google.api.services.people.v1.model.Person;
 
-import fr.houseofcode.dap.Config;
+import fr.houseofcode.dap.ws.Config;
 
 /**
  * @author djer

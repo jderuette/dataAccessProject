@@ -1,4 +1,4 @@
-package fr.houseofcode.dap.google;
+package fr.houseofcode.dap.ws.google;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,8 +22,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 
-import fr.houseofcode.dap.Config;
-import fr.houseofcode.dap.GoogleFacade;
+import fr.houseofcode.dap.ws.Config;
+import fr.houseofcode.dap.ws.GoogleFacade;
 
 /**
  * @author djer

@@ -5,4 +5,4 @@
  * @author djer
  *
  */
-package fr.houseofcode.dap.web;
+package fr.houseofcode.dap.ws.web;

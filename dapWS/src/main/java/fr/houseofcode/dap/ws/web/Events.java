@@ -1,4 +1,4 @@
-package fr.houseofcode.dap.web;
+package fr.houseofcode.dap.ws.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.api.services.calendar.model.Event;
 
-import fr.houseofcode.dap.GoogleFacade;
+import fr.houseofcode.dap.ws.GoogleFacade;
 
 /**
  * @author djer
@@ -33,7 +33,8 @@ public class Events {
      * @param requestedUser user Id or "me"
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{requestedUser}", consumes = "!"+MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "text/plain")
+    @RequestMapping(value = "/next/{requestedUser}", consumes = "!"
+            + MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "text/plain")
     public String nextEvent(@PathVariable final String requestedUser) {
         return googleFacade.display(googleFacade.getNextEvent(requestedUser));
     }
@@ -43,7 +44,7 @@ public class Events {
      * @param requestedUser user Id or "me"
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{requestedUser}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/next/{requestedUser}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Event nextEventJson(@PathVariable final String requestedUser) {
         return googleFacade.getNextEvent(requestedUser);

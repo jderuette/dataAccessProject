@@ -1,4 +1,4 @@
-package fr.houseofcode.dap.web;
+package fr.houseofcode.dap.ws.web;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

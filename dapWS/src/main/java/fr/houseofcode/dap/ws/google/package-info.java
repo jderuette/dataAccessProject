@@ -5,4 +5,4 @@
  * @author djer
  *
  */
-package fr.houseofcode.dap.google;
+package fr.houseofcode.dap.ws.google;

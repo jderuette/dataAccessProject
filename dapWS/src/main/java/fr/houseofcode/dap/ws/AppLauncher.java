@@ -1,4 +1,4 @@
-package fr.houseofcode.dap;
+package fr.houseofcode.dap.ws;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Hello world!
+ * Spring Boot launcher.
  */
 @SpringBootApplication
 public class AppLauncher {

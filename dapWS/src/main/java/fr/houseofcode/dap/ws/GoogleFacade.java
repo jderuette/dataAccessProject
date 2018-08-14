@@ -1,4 +1,4 @@
-package fr.houseofcode.dap;
+package fr.houseofcode.dap.ws;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -14,8 +14,8 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 
-import fr.houseofcode.dap.google.CalendarService;
-import fr.houseofcode.dap.google.GmailService;
+import fr.houseofcode.dap.ws.google.CalendarService;
+import fr.houseofcode.dap.ws.google.GmailService;
 
 /**
  * @author djer
