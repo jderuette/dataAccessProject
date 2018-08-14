@@ -33,8 +33,7 @@ public class Events {
      * @param requestedUser user Id or "me"
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{requestedUser}", consumes = "!"
-            + MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "text/plain")
+    @RequestMapping(value = "/next/{requestedUser}", consumes = "!"+MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "text/plain")
     public String nextEvent(@PathVariable final String requestedUser) {
         return googleFacade.display(googleFacade.getNextEvent(requestedUser));
     }

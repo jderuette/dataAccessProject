@@ -54,7 +54,7 @@ public class GoogleFacade {
      */
     public void display(final String user) throws IOException, GeneralSecurityException {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Displaying infomration for user ID : " + user);
+            LOG.debug("Displaying information for user ID : " + user);
         }
         userMessage(buildInboxLabels(user));
         userMessage("Nb Emails : " + getNbUnreadEmail(user));
