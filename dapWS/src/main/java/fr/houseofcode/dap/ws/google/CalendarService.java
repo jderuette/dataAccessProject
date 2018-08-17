@@ -21,7 +21,6 @@ import fr.houseofcode.dap.ws.Config;
 
 /**
  * @author djer
- *
  */
 public class CalendarService extends GoogleService {
 
@@ -34,7 +33,7 @@ public class CalendarService extends GoogleService {
      * Global instance of the scopes required by this quickstart. If modifying these
      * scopes, delete your previously saved credentials/ folder.
      */
-    private static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR_READONLY);
+    public static final List<String> SCOPES = Arrays.asList(CalendarScopes.CALENDAR_READONLY);
 
     /**
      * Create a new CalendarService.
@@ -50,28 +49,29 @@ public class CalendarService extends GoogleService {
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
      */
-    public Calendar getCalendarService() throws GeneralSecurityException, IOException {
+    public Calendar getCalendarService(final String user) throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        final Calendar service = new Calendar.Builder(httpTransport, getGoogleJsonFactory(),
-                getCredentials(httpTransport)).setApplicationName(getConfiguration().getApplicationName()).build();
+        final Calendar service = new Calendar.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(user))
+                .setApplicationName(getConfiguration().getApplicationName()).build();
 
         return service;
     }
 
     /**
      * Get the Google Events.
+     * @param user      The user ID used to store the credentials
      * @param from      search events after this dataTime
      * @param maxResult maximum number of result to retrieve
      * @return a Google Events (containing found events)
      */
-    public Events getEvents(final DateTime from, final Integer maxResult) {
+    public Events getEvents(final String user, final DateTime from, final Integer maxResult) {
         Events events = new Events();
 
         Calendar service;
         try {
-            service = getCalendarService();
-            events = service.events().list("primary").setMaxResults(maxResult).setTimeMin(from)
-                    .setOrderBy("startTime").setSingleEvents(true).execute();
+            service = getCalendarService(user);
+            events = service.events().list("primary").setMaxResults(maxResult).setTimeMin(from).setOrderBy("startTime")
+                    .setSingleEvents(true).execute();
         } catch (GeneralSecurityException | IOException e) {
             LOG.error("Error while trying to get Calendar remote service", e.getMessage());
         }
@@ -88,23 +88,26 @@ public class CalendarService extends GoogleService {
 
         Event nextEvent = null;
         final DateTime now = new DateTime(System.currentTimeMillis());
-        final Events events = getEvents(now, 1);
+        final Events events = getEvents(user, now, 1);
         final List<Event> items = events.getItems();
-        nextEvent = items.get(0);
+        if (null != items && items.size() > 0) {
+            nextEvent = items.get(0);
+        }
         return nextEvent;
     }
 
     /**
      * Get the "status" for the Event for the current connected user.
+     * @param user  The user ID used to store the credentials
      * @param event the event to search for status of current user.
      * @return A string representation of the user status
      */
-    public String getMyStatus(final Event event) {
+    public String getMyStatus(final String user, final Event event) {
         String myStatus = "unknow";
         if (null != event) {
             final AppPeopleService peopleService = new AppPeopleService(getConfiguration());
-            final String currentUser = peopleService.getCurrentConnectedUserEmail();
-            myStatus = getstatus(event, currentUser);
+            final String currentUser = peopleService.getCurrentConnectedUserEmail(user);
+            myStatus = getStatus(event, currentUser);
         }
         return myStatus;
     }
@@ -115,7 +118,7 @@ public class CalendarService extends GoogleService {
      * @param userEmail the user Email to search status for
      * @return the user status (or "unknow" if not found)
      */
-    public static String getstatus(final Event event, final String userEmail) {
+    public static String getStatus(final Event event, final String userEmail) {
         String myStatus = "unknow";
         if (null != event.getAttendees() && event.getAttendees().size() > 0) {
             for (final EventAttendee attendee : event.getAttendees()) {
@@ -123,7 +126,7 @@ public class CalendarService extends GoogleService {
                     myStatus = attendee.getResponseStatus();
                     if (LOG.isDebugEnabled()) {
                         LOG.debug(new StringBuilder().append("For Event : ").append(event.getSummary())
-                                .append(" current conencted user (").append(userEmail)
+                                .append(" current connected user (").append(userEmail)
                                 .append(") is attendee and has status : ").append(myStatus).toString());
                     }
                     break;
@@ -134,8 +137,7 @@ public class CalendarService extends GoogleService {
                 myStatus = "Organizer";
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(new StringBuilder().append("For Event : ").append(event.getSummary())
-                            .append(" current conencted user (").append(userEmail).append(") is organizer")
-                            .toString());
+                            .append(" current connected user (").append(userEmail).append(") is organizer").toString());
                 }
             }
         }
@@ -143,7 +145,9 @@ public class CalendarService extends GoogleService {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see fr.houseofcode.dap.google.GoogleService#getLog()
      */
     @Override
@@ -151,7 +155,9 @@ public class CalendarService extends GoogleService {
         return LOG;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see fr.houseofcode.dap.google.GoogleService#getScopes()
      */
     @Override

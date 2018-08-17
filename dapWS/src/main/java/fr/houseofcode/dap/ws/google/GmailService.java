@@ -37,7 +37,7 @@ public class GmailService extends GoogleService {
      * Global instance of the scopes required by this quickstart. If modifying these
      * scopes, delete your previously saved credentials/ folder.
      */
-    private static final List<String> SCOPES = Arrays.asList(GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_READONLY);
+    public static final List<String> SCOPES = Arrays.asList(GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_READONLY);
 
     /**
      * Create an new GMailService.
@@ -53,10 +53,10 @@ public class GmailService extends GoogleService {
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
      */
-    public Gmail getGmailService() throws GeneralSecurityException, IOException {
+    public Gmail getGmailService(final String user) throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        final Gmail service = new Gmail.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(httpTransport))
+        final Gmail service = new Gmail.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(user))
                 .setApplicationName(getConfiguration().getApplicationName()).build();
 
         return service;
@@ -64,7 +64,7 @@ public class GmailService extends GoogleService {
 
     /**
      * Get a list of message (email) from Google.
-     * @param user          The user ID or "me"
+     * @param user          The user ID used to store the credentials
      * @param nextPageToken The "next page token" received from the previous call.
      * @param labels        to filter message ("INBOX" = user main box, "UNREAD" =
      *                      unread messages, ...)
@@ -76,8 +76,8 @@ public class GmailService extends GoogleService {
         }
         ListMessagesResponse listResponse = null;
         try {
-            final Gmail service = getGmailService();
-            listResponse = service.users().messages().list(user).setLabelIds(labels).setIncludeSpamTrash(Boolean.FALSE)
+            final Gmail service = getGmailService(user);
+            listResponse = service.users().messages().list("me").setLabelIds(labels).setIncludeSpamTrash(Boolean.FALSE)
                     .setPageToken(nextPageToken).setMaxResults(MAX_EMAIL_PER_PAGES).execute();
         } catch (IOException | GeneralSecurityException e) {
             LOG.error("Error while trying to get Gmail remote service", e.getMessage());
@@ -88,15 +88,15 @@ public class GmailService extends GoogleService {
 
     /**
      * retrieve all label from a Google Account.
-     * @param user The user ID or "me"
+     * @param user The user ID used to store the credentials
      * @return a string representation of all labels
      */
     public List<Label> getInboxLabels(final String user) {
         List<Label> labels = new ArrayList<Label>();
 
         try {
-            final Gmail service = getGmailService();
-            final ListLabelsResponse listResponse = service.users().labels().list(user).execute();
+            final Gmail service = getGmailService(user);
+            final ListLabelsResponse listResponse = service.users().labels().list("me").execute();
             labels = listResponse.getLabels();
         } catch (IOException | GeneralSecurityException e) {
             LOG.error("Error while trying to get Gmail remote service", e.getMessage());

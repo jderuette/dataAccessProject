@@ -30,24 +30,24 @@ public class Events {
 
     /**
      * Display the next Event.
-     * @param requestedUser user Id or "me"
+     * @param userId The user ID used to store the credentials
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{requestedUser}", consumes = "!"
+    @RequestMapping(value = "/next/{userId}", consumes = "!"
             + MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "text/plain")
-    public String nextEvent(@PathVariable final String requestedUser) {
-        return googleFacade.display(googleFacade.getNextEvent(requestedUser));
+    public String nextEvent(@PathVariable final String userId) {
+        return googleFacade.display(userId, googleFacade.getNextEvent(userId));
     }
 
     /**
      * return a JSON representation of the next Event.
-     * @param requestedUser user Id or "me"
+     * @param userId The user ID used to store the credentials
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{requestedUser}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/next/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Event nextEventJson(@PathVariable final String requestedUser) {
-        return googleFacade.getNextEvent(requestedUser);
+    public Event nextEventJson(@PathVariable final String userId) {
+        return googleFacade.getNextEvent(userId);
     }
 
 }

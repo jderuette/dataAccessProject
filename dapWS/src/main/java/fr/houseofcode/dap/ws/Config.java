@@ -21,7 +21,10 @@ public class Config {
     /** Default application credential file. */
     private static final String CLIENT_SECRET_FILE = System.getProperty("user.home")
             + System.getProperty("file.separator") + "app_data" + System.getProperty("file.separator")
-            + "credentials.json";
+            // + "credentials.json";
+            + "client_id_server.json";
+
+    private static final String OAUTH2_CALLBACK_URL = "/oAuth2Callback";
 
     /** Application name. */
     private String applicationName;
@@ -29,6 +32,8 @@ public class Config {
     private String credentialFolder;
     /** Application credential file. */
     private String clientSecretFile;
+    /** OAuth2 Callback URL */
+    private String oAuth2CallbackUrl;
 
     /**
      * Load the default configuration.
@@ -38,6 +43,7 @@ public class Config {
         applicationName = APPLICATION_NAME;
         credentialFolder = CREDENTIALS_FOLDER;
         clientSecretFile = CLIENT_SECRET_FILE;
+        oAuth2CallbackUrl = OAUTH2_CALLBACK_URL;
     }
 
     /**
@@ -98,6 +104,13 @@ public class Config {
      */
     public String getClientSecretFile() {
         return clientSecretFile;
+    }
+
+    /**
+     * @return the oAuth2CallbackUrl
+     */
+    public final String getoAuth2CallbackUrl() {
+        return oAuth2CallbackUrl;
     }
 
 }

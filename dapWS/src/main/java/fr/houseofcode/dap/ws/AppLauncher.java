@@ -33,7 +33,7 @@ public class AppLauncher {
                     + System.getProperty("file.separator") + "dataAccessProject", "Djer Data Access Project");
 
             final GoogleFacade app = new GoogleFacade(configuration);
-            app.display("me");
+            // app.display("me");
 
         };
     }

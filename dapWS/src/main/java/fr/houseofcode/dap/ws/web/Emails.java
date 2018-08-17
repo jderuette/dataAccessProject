@@ -28,22 +28,22 @@ public class Emails {
 
     /**
      * Retrieve the Google Labels.
-     * @param requestedUser user Id or "me"
+     * @param userId The user ID used to store the credentials
      * @return a string representation of labels
      */
-    @RequestMapping("/labels/{requestedUser}")
-    public String getLabels(@PathVariable final String requestedUser) {
-        return googleFacade.buildInboxLabels(requestedUser);
+    @RequestMapping("/labels/{userId}")
+    public String getLabels(@PathVariable final String userId) {
+        return googleFacade.buildInboxLabels(userId);
     }
 
     /**
      * count unread messages.
-     * @param requestedUser user Id or "me"
+     * @param userId The user ID used to store the credentials
      * @return the number of unread email
      */
-    @RequestMapping("/unread/count/{requestedUser}")
-    public String getNbunreadEmail(@PathVariable final String requestedUser) {
-        return googleFacade.getNbUnreadEmail(requestedUser);
+    @RequestMapping("/unread/count/{userId}")
+    public String getNbunreadEmail(@PathVariable final String userId) {
+        return googleFacade.getNbUnreadEmail(userId);
     }
 
 }

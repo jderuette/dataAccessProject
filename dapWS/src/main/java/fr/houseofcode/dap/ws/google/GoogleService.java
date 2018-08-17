@@ -13,8 +13,6 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -36,6 +34,7 @@ public abstract class GoogleService {
     /** Application Configuration. */
     private final Config configuration;
 
+    private GoogleAuthorizationCodeFlow flow;
 
     /**
      * Prepare a Google Service.
@@ -64,7 +63,23 @@ public abstract class GoogleService {
      * @return An authorized Credential object.
      * @throws IOException If there is no client_secret.
      */
-    protected Credential getCredentials(final NetHttpTransport httpTransport) throws IOException {
+    public Credential getCredentials(final String userId) throws IOException {
+        GoogleAuthorizationCodeFlow flow = getFlow();
+        return flow.loadCredential(userId);
+
+        // installed App code
+        // return new AuthorizationCodeInstalledApp(flow, new
+        // LocalServerReceiver()).authorize("user");
+    }
+
+    public GoogleAuthorizationCodeFlow getFlow() throws IOException {
+        if (null == flow) {
+                flow = initializeFlow();
+        }
+        return flow;
+    }
+
+    public GoogleAuthorizationCodeFlow initializeFlow() throws IOException {
         // Load client secrets.
         Reader appClientSecret = null;
         final File appClientSecretFile = new File(configuration.getClientSecretFile());
@@ -90,11 +105,12 @@ public abstract class GoogleService {
         final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(getGoogleJsonFactory(), appClientSecret);
 
         // Build flow and trigger user authorization request.
-        final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport,
+        final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(),
                 getGoogleJsonFactory(), clientSecrets, getScopes())
                         .setDataStoreFactory(new FileDataStoreFactory(new File(configuration.getCredentialFolder())))
                         .setAccessType("offline").build();
-        return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+
+        return flow;
     }
 
     /**

@@ -48,7 +48,7 @@ public class GoogleFacade {
 
     /**
      * Display all synthetic information.
-     * @param user The user ID or "me"
+     * @param user The user ID used to store the credentials
      * @throws IOException              a general error (network, fileSystem, ...)
      * @throws GeneralSecurityException general Google security errors
      */
@@ -59,7 +59,7 @@ public class GoogleFacade {
         userMessage(buildInboxLabels(user));
         userMessage("Nb Emails : " + getNbUnreadEmail(user));
 
-        userMessage("Prochain evennement : " + display(getNextEvent(user)));
+        userMessage("Prochain evennement : " + display(user, getNextEvent(user)));
     }
 
     /**
@@ -88,7 +88,7 @@ public class GoogleFacade {
         if (null != listMessagesResponse) {
             nbEmail += GmailService.countNbMessage(listMessagesResponse);
 
-            while (null != listMessagesResponse.getNextPageToken()) {
+            while (null != listMessagesResponse && null != listMessagesResponse.getNextPageToken()) {
                 listMessagesResponse = service.getMessages(user, listMessagesResponse.getNextPageToken(),
                         Arrays.asList("INBOX", "UNREAD"));
                 nbEmail += GmailService.countNbMessage(listMessagesResponse);
@@ -125,14 +125,15 @@ public class GoogleFacade {
 
     /**
      * Display an event as simple string for user.
+     * @param user
      * @param event The event to display
      * @return A simple string representation of the event
      */
-    public String display(final Event event) {
+    public String display(final String user, final Event event) {
         String eventText = "No Event";
         if (null != event) {
             final CalendarService service = new CalendarService(configuration);
-            final String myStatus = service.getMyStatus(event);
+            final String myStatus = service.getMyStatus(user, event);
             eventText = new StringBuilder().append(event.getSummary()).append("[" + event.getStart()).append("] ")
                     .append(myStatus).toString();
         }

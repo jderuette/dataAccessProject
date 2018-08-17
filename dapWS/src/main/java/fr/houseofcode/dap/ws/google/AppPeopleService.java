@@ -31,7 +31,7 @@ public class AppPeopleService extends GoogleService {
      * Global instance of the scopes required by this quickstart. If modifying these
      * scopes, delete your previously saved credentials/ folder.
      */
-    private static final List<String> SCOPES = Arrays.asList("https://www.googleapis.com/auth/plus.login ",
+    public static final List<String> SCOPES = Arrays.asList("https://www.googleapis.com/auth/plus.login ",
             "https://www.googleapis.com/auth/userinfo.email");
 
     /**
@@ -48,22 +48,23 @@ public class AppPeopleService extends GoogleService {
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
      */
-    public PeopleService getPeopoleService() throws GeneralSecurityException, IOException {
+    public PeopleService getPeopoleService(final String user) throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         final PeopleService peopleService = new PeopleService.Builder(httpTransport, getGoogleJsonFactory(),
-                getCredentials(httpTransport)).setApplicationName(getConfiguration().getApplicationName()).build();
+                getCredentials(user)).setApplicationName(getConfiguration().getApplicationName()).build();
 
         return peopleService;
     }
 
     /**
      * Retrieve the current connected User Person information.
+     * @param user The user ID used to store the credentials
      * @return a Google Person
      */
-    private Person getMe() {
+    private Person getMe(final String user) {
         Person profile = new Person();
         try {
-            final PeopleService servcie = getPeopoleService();
+            final PeopleService servcie = getPeopoleService(user);
             profile = servcie.people().get("people/me").setPersonFields("emailAddresses").execute();
         } catch (GeneralSecurityException | IOException e) {
             LOG.error("Error while trying to get Peopole remote service", e.getMessage());
@@ -74,11 +75,12 @@ public class AppPeopleService extends GoogleService {
 
     /**
      * Try to get the email address of the current connected User.
+     * @param user The user ID used to store the credentials
      * @return Email address of the current connected user
      */
-    public String getCurrentConnectedUserEmail() {
+    public String getCurrentConnectedUserEmail(final String user) {
         String userEmail = null;
-        final Person mySelf = getMe();
+        final Person mySelf = getMe(user);
 
             final List<EmailAddress> emailsAdresses = mySelf.getEmailAddresses();
             if (null != emailsAdresses && emailsAdresses.size() > 0) {
