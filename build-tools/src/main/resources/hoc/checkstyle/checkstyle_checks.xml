@@ -9,11 +9,11 @@
     <property name="fileExtensions" value="java, properties, xml" />
 
     <module name="SuppressionFilter">
-        <property name="file" value="${basedir}/hoc/checkstyle/suppressions.xml"/>
+        <property name="file" value="${checkstyle.suppressions.file}"/>
 
         <!-- "file" define : 
         - in elcipse using window->preference->checkstyle->[select a conf]->properties->additional properties 
-                then add "checkstyle.suppressions.file" with a value like "${pro${project_loc}/quality/checkstyle/supression.xml"
+                then add "checkstyle.suppressions.file" with a value like "${project_loc}/quality/checkstyle/supression.xml"
         - in maven using configuration in reporting->plugins->plugin[org.apache.maven.plugins:maven-checkstyle-plugin:3.x]->configuration->suppressionsLocation 
                 with a value like "quality/checkstyle/suppressions.xml"-->
         <property name="optional" value="false" />

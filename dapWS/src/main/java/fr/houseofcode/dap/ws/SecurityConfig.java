@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.houseofcode.dap.ws;
 
 /**
@@ -16,8 +13,8 @@ public class SecurityConfig /* extends WebSecurityConfigurerAdapter */ {
 //
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
-////        http.authorizeRequests().anyRequest().authenticated().and().requestCache().requestCache(new NullRequestCache())
-////                .and().httpBasic();
+//       http.authorizeRequests().anyRequest().authenticated().and().requestCache()
+//     .requestCache(new NullRequestCache()).and().httpBasic();
 //
 //        // standard MVC config
 //        http.authorizeRequests().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()

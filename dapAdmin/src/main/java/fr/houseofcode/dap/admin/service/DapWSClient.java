@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.houseofcode.dap.admin.service;
 
 import java.io.BufferedReader;
@@ -20,22 +17,27 @@ import org.apache.logging.log4j.Logger;
  * @author djer
  */
 public class DapWSClient {
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LogManager.getLogger();
 
+    /** Status code for a successful request. */
+    public static final int STATUS_CODE_OK = 200;
+
+    /** Root URL for DaP WS. */
     private String wsMainUrl;
+    /** singleton instance. */
     private static DapWSClient instance;
 
-    /**
-     * 
-     */
+    /** Default Dap Client. */
     public DapWSClient() {
         this.wsMainUrl = "http://localhost:8080";
     }
 
-    public synchronized static DapWSClient get() {
+    /**
+     * Singleton.
+     * @return the only class instance
+     */
+    public static synchronized DapWSClient get() {
         if (null == instance) {
             instance = new DapWSClient();
         }
@@ -58,6 +60,10 @@ public class DapWSClient {
         return get(wsMainUrl + "/events/next/" + user);
     }
 
+    /**
+     * Retrieve the current user email Labels.
+     * @return a string representation fo Labels
+     */
     public String getEmailLabels() {
         return getEmailLabels("me");
     }
@@ -66,6 +72,10 @@ public class DapWSClient {
         return get(wsMainUrl + "/emails/labels/" + user);
     }
 
+    /**
+     * Retrieve the current user number of unread e-mails (in his main Box).
+     * @return the number of unread e-mails
+     */
     public String getNbUnreadEmails() {
         return getNbUnreadEmails("me");
     }
@@ -74,6 +84,11 @@ public class DapWSClient {
         return get(wsMainUrl + "/emails/unread/count/" + user);
     }
 
+    /**
+     * Retrieve Data from DaP WS.
+     * @param wsPath path to query
+     * @return the data from DaP
+     */
     private String get(final String wsPath) {
         String response = null;
         final Callable<String> externaleCall = new Callable<String>() {
@@ -88,7 +103,7 @@ public class DapWSClient {
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
 
-                    if (conn.getResponseCode() != 200) {
+                    if (conn.getResponseCode() != STATUS_CODE_OK) {
                         LOG.error("Bad HTTP Response on " + wsPath + " : " + conn.getResponseCode());
                         // throw new RuntimeException("Failed : HTTP error code : " +
                         // conn.getResponseCode());

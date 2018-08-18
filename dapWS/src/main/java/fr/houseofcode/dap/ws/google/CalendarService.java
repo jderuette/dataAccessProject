@@ -45,16 +45,15 @@ public class CalendarService extends GoogleService {
 
     /**
      * Build a new Google Calendar Service.
+     * @param user user ID
      * @return the Google Calendar service
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
      */
     public Calendar getCalendarService(final String user) throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        final Calendar service = new Calendar.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(user))
+        return new Calendar.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(user))
                 .setApplicationName(getConfiguration().getApplicationName()).build();
-
-        return service;
     }
 
     /**
@@ -147,7 +146,6 @@ public class CalendarService extends GoogleService {
 
     /*
      * (non-Javadoc)
-     * 
      * @see fr.houseofcode.dap.google.GoogleService#getLog()
      */
     @Override
@@ -157,7 +155,6 @@ public class CalendarService extends GoogleService {
 
     /*
      * (non-Javadoc)
-     * 
      * @see fr.houseofcode.dap.google.GoogleService#getScopes()
      */
     @Override

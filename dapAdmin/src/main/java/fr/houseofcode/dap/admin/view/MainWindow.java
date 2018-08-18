@@ -49,12 +49,18 @@ public class MainWindow extends JFrame {
      */
     private String defaultTitle = "House of Code - DAP Admin";
 
+    /** Display next event informations. */
     private JLabel nextEventLabel;
+    /** Display number of unread e-mails. */
     private JLabel nbUnreadEmailsLabel;
+    /** Allow scroll for e-mails labels. */
     private JScrollPane emailLabels;
+    /** Display e-mails Labels. */
     private JTextArea emailLabelsArea;
 
+    /** Store button for user actions. */
     private JPanel actionsPan;
+    /** to refresh Data. */
     private JButton refreshButton;
 
     /**
@@ -122,40 +128,73 @@ public class MainWindow extends JFrame {
         this.setVisible(false);
     }
 
+    /**
+     * Set default value for Next Event.
+     */
     public void resetNextEvent() {
         resetText(nextEventLabel);
     }
 
+    /**
+     * Set value for Next Event.
+     * @param nextEventInfo informations of the next Event
+     */
     public void setNextEvent(final String nextEventInfo) {
         nextEventLabel.setText(nextEventInfo);
     }
 
+    /**
+     * Set default value fore-mails labels.
+     */
     public void resetEmailsLabels() {
         resetText(emailLabelsArea);
     }
 
+    /**
+     * Set value for e-mail labels.
+     * @param labels the new labels list
+     */
     public void setEmailsLabels(final String labels) {
         emailLabelsArea.setText(labels);
     }
 
+    /**
+     * Set default value for number of unread e-mails.
+     */
     public void resetNbUnreadEmails() {
         resetText(nbUnreadEmailsLabel);
     }
 
+    /**
+     * Set value for number of unread e-mails.
+     * @param nbUnreadEmails the new Number of unread e-mails
+     */
     public void setNbUnreadEmails(final String nbUnreadEmails) {
         nbUnreadEmailsLabel.setText(nbUnreadEmails);
     }
 
+    /**
+     * Allow to handle user action on refresh.
+     * @param actionListener the action listener to call
+     */
     public void addRefreshCallback(final ActionListener actionListener) {
         refreshButton.addActionListener(actionListener);
     }
 
+    /**
+     * Reset display text for a JLabel.
+     * @param label the Jlabel to reset
+     */
     private void resetText(final JLabel label) {
         label.setText("...");
     }
 
-    private void resetText(final JTextArea label) {
-        label.setText("...");
+    /**
+     * Reset display text for a JTextArea.
+     * @param textArea the textArea to reset
+     */
+    private void resetText(final JTextArea textArea) {
+        textArea.setText("...");
     }
 
     /**

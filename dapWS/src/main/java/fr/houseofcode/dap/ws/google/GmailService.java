@@ -49,6 +49,7 @@ public class GmailService extends GoogleService {
 
     /**
      * Build a new Gmail remote service.
+     * @param user user ID
      * @return the Gmail Service
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
@@ -56,10 +57,9 @@ public class GmailService extends GoogleService {
     public Gmail getGmailService(final String user) throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        final Gmail service = new Gmail.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(user))
+        return new Gmail.Builder(httpTransport, getGoogleJsonFactory(), getCredentials(user))
                 .setApplicationName(getConfiguration().getApplicationName()).build();
 
-        return service;
     }
 
     /**

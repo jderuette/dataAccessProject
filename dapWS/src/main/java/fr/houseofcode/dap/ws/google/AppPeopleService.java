@@ -44,16 +44,15 @@ public class AppPeopleService extends GoogleService {
 
     /**
      * Build a new Google People Service.
+     * @param user user ID
      * @return the Google people service
      * @throws GeneralSecurityException general Google security errors
      * @throws IOException              a general error (network, fileSystem, ...)
      */
     public PeopleService getPeopoleService(final String user) throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        final PeopleService peopleService = new PeopleService.Builder(httpTransport, getGoogleJsonFactory(),
+        return new PeopleService.Builder(httpTransport, getGoogleJsonFactory(),
                 getCredentials(user)).setApplicationName(getConfiguration().getApplicationName()).build();
-
-        return peopleService;
     }
 
     /**

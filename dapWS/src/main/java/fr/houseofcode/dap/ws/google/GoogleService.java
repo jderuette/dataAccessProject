@@ -34,6 +34,7 @@ public abstract class GoogleService {
     /** Application Configuration. */
     private final Config configuration;
 
+    /** Google Authorization Flow. */
     private GoogleAuthorizationCodeFlow flow;
 
     /**
@@ -59,19 +60,23 @@ public abstract class GoogleService {
 
     /**
      * Creates an authorized Credential object.
-     * @param httpTransport The network HTTP Transport.
+     * @param userId the App User ID
      * @return An authorized Credential object.
      * @throws IOException If there is no client_secret.
      */
     public Credential getCredentials(final String userId) throws IOException {
-        GoogleAuthorizationCodeFlow flow = getFlow();
-        return flow.loadCredential(userId);
+        return getFlow().loadCredential(userId);
 
         // installed App code
         // return new AuthorizationCodeInstalledApp(flow, new
         // LocalServerReceiver()).authorize("user");
     }
 
+    /**
+     * Initialize Google flow (if not already initialized) and return it.
+     * @return a Google Authorization Flow
+     * @throws IOException if Google Error occurs
+     */
     public GoogleAuthorizationCodeFlow getFlow() throws IOException {
         if (null == flow) {
                 flow = initializeFlow();
@@ -79,6 +84,11 @@ public abstract class GoogleService {
         return flow;
     }
 
+    /**
+     * Initialize a Google Flow.
+     * @return the Google Flow
+     * @throws IOException if Google Error occurs
+     */
     public GoogleAuthorizationCodeFlow initializeFlow() throws IOException {
         // Load client secrets.
         Reader appClientSecret = null;
@@ -105,12 +115,12 @@ public abstract class GoogleService {
         final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(getGoogleJsonFactory(), appClientSecret);
 
         // Build flow and trigger user authorization request.
-        final GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(),
+        final GoogleAuthorizationCodeFlow newFlow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(),
                 getGoogleJsonFactory(), clientSecrets, getScopes())
                         .setDataStoreFactory(new FileDataStoreFactory(new File(configuration.getCredentialFolder())))
                         .setAccessType("offline").build();
 
-        return flow;
+        return newFlow;
     }
 
     /**

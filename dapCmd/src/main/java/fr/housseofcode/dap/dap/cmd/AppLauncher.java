@@ -10,22 +10,43 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * display informations from Data Access Project
+ * display informations from Data Access Project.
  */
-public class AppLauncher {
+public final class AppLauncher {
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger();
 
-    public static void main(final String[] args) {
-        final String wsUrl = "http://localhost:8080";
+    /** Status code for a successful request. */
+    public static final int STATUS_CODE_OK = 200;
 
-        System.out.println("Labels : " + get(wsUrl + "/emails/labels/me"));
-        System.out.println("Nb emails non lus : " + get(wsUrl + "/emails/unread/count/me"));
-        System.out.println("Prochains évènement : " + get(wsUrl + "/events/next/me"));
+    /** Default Dap WS URl. */
+    public static final String DEFAULT_WS_URL = "http://localhost:8080";
+
+    /**
+     * Main entry Point.
+     */
+    private AppLauncher() {
+        throw new UnsupportedOperationException("Don not instatiate a Main Class ! ");
     }
 
+    /**
+     * Entry point.
+     * @param args command line parameters
+     */
+    public static void main(final String[] args) {
+
+        System.out.println("Labels : " + get(DEFAULT_WS_URL + "/emails/labels/me"));
+        System.out.println("Nb emails non lus : " + get(DEFAULT_WS_URL + "/emails/unread/count/me"));
+        System.out.println("Prochains évènement : " + get(DEFAULT_WS_URL + "/events/next/me"));
+    }
+
+    /**
+     * Retrieve data from DaP server.
+     * @param wsPath path to query
+     * @return The response body from the server
+     */
     private static String get(final String wsPath) {
         final StringBuilder response = new StringBuilder();
         try {
@@ -34,7 +55,7 @@ public class AppLauncher {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
 
-            if (conn.getResponseCode() != 200) {
+            if (conn.getResponseCode() != STATUS_CODE_OK) {
                 LOG.error("Bad HTTP Response : " + conn.getResponseCode());
                 throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
             }

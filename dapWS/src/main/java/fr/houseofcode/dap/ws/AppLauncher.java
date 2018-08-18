@@ -32,7 +32,7 @@ public class AppLauncher {
             configuration.init(System.getProperty("user.home") + System.getProperty("file.separator") + "houseOfCode"
                     + System.getProperty("file.separator") + "dataAccessProject", "Djer Data Access Project");
 
-            final GoogleFacade app = new GoogleFacade(configuration);
+            // final GoogleFacade app = new GoogleFacade(configuration);
             // app.display("me");
 
         };

@@ -20,11 +20,10 @@ import fr.houseofcode.dap.admin.view.MainWindow;
  */
 public final class Launcher {
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LogManager.getLogger();
 
+    /** The main Windows. */
     private static MainWindow mainWindow;
 
     /**
@@ -66,6 +65,9 @@ public final class Launcher {
         mainWindow.display();
     }
 
+    /**
+     * Update (refresh) events informations.
+     */
     private static void updateEvents() {
         mainWindow.resetNextEvent();
         SwingUtilities.invokeLater(new Runnable() {
@@ -77,6 +79,9 @@ public final class Launcher {
         });
     }
 
+    /**
+     * Update (refresh) emails informations.
+     */
     private static void updateEmails() {
         mainWindow.resetEmailsLabels();
         SwingUtilities.invokeLater(new Runnable() {

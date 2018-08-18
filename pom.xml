@@ -21,7 +21,7 @@
         <checkstyleVersion>6.18</checkstyleVersion>
         <log4jVersion>2.9.1</log4jVersion>
         <log4jVersion>2.9.1</log4jVersion>
-        <buildToolVersion>0.0.3</buildToolVersion>
+        <buildToolVersion>0.0.4</buildToolVersion>
 
         <mainDir>${project.basedir}</mainDir>
     </properties>
@@ -141,7 +141,9 @@
                 <version>3.0.0</version>
                 <configuration>
                     <configLocation>/hoc/checkstyle/checkstyle_checks.xml</configLocation>
-                    <propertyExpansion>basedir=${mainDir}/build-tools/src/main/resources</propertyExpansion>
+                    <suppressionsLocation>/hoc/checkstyle/suppressions.xml</suppressionsLocation>
+                    <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                   <!--  <propertyExpansion>basedir=${mainDir}/build-tools/src/main/resources</propertyExpansion> -->
                     <aggregate>false</aggregate>
                 </configuration>
                 <reportSets>

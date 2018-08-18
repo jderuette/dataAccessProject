@@ -23,7 +23,7 @@ public class Config {
             + System.getProperty("file.separator") + "app_data" + System.getProperty("file.separator")
             // + "credentials.json";
             + "client_id_server.json";
-
+    /** Default local OAuth2Callback URL. */
     private static final String OAUTH2_CALLBACK_URL = "/oAuth2Callback";
 
     /** Application name. */
@@ -32,7 +32,7 @@ public class Config {
     private String credentialFolder;
     /** Application credential file. */
     private String clientSecretFile;
-    /** OAuth2 Callback URL */
+    /** OAuth2 Callback URL. */
     private String oAuth2CallbackUrl;
 
     /**

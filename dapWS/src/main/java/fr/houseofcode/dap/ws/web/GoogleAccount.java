@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.houseofcode.dap.ws.web;
 
 import java.io.IOException;
@@ -13,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,40 +33,45 @@ import fr.houseofcode.dap.ws.google.GoogleService;
  * @author djer @SessionAttributes("user")
  */
 @Controller
-public class Auth extends GoogleService {
+public class GoogleAccount extends GoogleService {
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LogManager.getLogger();
 
-    public Auth(Config config) {
+    /**
+     * @param config The Application configuration
+     */
+    public GoogleAccount(final Config config) {
         super(config);
     }
 
-    @Autowired
-    GoogleService googleService;
-    @Autowired
-    Config config;
-
+    /**
+     * Add a Google account (user will be prompt to connect and accept required
+     * access).
+     * @param userId  the user to store Data
+     * @param request the HTTP request
+     * @param session the HTTP session
+     * @return the view to Display (on Error)
+     */
     @RequestMapping("/account/add/{userId}")
-    public String addAccount(@PathVariable final String userId, HttpServletRequest request, HttpSession session) {
+    public String addAccount(@PathVariable final String userId, final HttpServletRequest request,
+            final HttpSession session) {
         String response = "errorOccurs";
         GoogleAuthorizationCodeFlow flow;
         Credential credential = null;
         try {
-            flow = googleService.getFlow();
+            flow = super.getFlow();
             credential = flow.loadCredential(userId);
 
             if (credential != null && credential.getAccessToken() != null) {
                 response = "AccountAlreadyAdded";
             } else {
                 // redirect to the authorization flow
-                AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
-                authorizationUrl.setRedirectUri(buildRedirectUri(request, config.getoAuth2CallbackUrl()));
+                final AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
+                authorizationUrl.setRedirectUri(buildRedirectUri(request, getConfiguration().getoAuth2CallbackUrl()));
                 // store userId in session for CallBack Access
                 session.setAttribute("userId", userId);
-                return "redirect:" + authorizationUrl.build();
+                response = "redirect:" + authorizationUrl.build();
             }
         } catch (IOException e) {
             LOG.error("Error while loading credential (or Google Flow)", e);
@@ -79,59 +80,101 @@ public class Auth extends GoogleService {
         return response;
     }
 
+    /**
+     * Handle the Google response.
+     * @param request The HTTP Request
+     * @param code    The (encoded) code use by Google (token, expirationDate,...)
+     * @param session the HTTP Session
+     * @return the view to display
+     * @throws ServletException When Google account could not be connected to DaP.
+     */
     @RequestMapping("/oAuth2Callback")
-    public String oAuthCallback(HttpServletRequest request, @RequestParam final String code, HttpSession session)
-            throws ServletException {
-        String userId = null;
+    public String oAuthCallback(@RequestParam final String code, final HttpServletRequest request,
+            final HttpSession session) throws ServletException {
+        final String decodedCode = extracCode(request);
 
-        StringBuffer buf = request.getRequestURL();
-        if (request.getQueryString() != null) {
-            buf.append('?').append(request.getQueryString());
-        }
-        AuthorizationCodeResponseUrl responseUrl = new AuthorizationCodeResponseUrl(buf.toString());
-        String decodeCode = responseUrl.getCode();
-        if (responseUrl.getError() != null) {
-            LOG.error("Error when trying to add Google acocunt : " + responseUrl.getError());
-            throw new ServletException("Error when trying to add Google acocunt");
-            //onError(request, resp, responseUrl);
-        } else if (decodeCode == null) {
-            throw new MissingServletRequestParameterException("code", "String");
-        } else {
-            String redirectUri = buildRedirectUri(request, config.getoAuth2CallbackUrl());
-            GoogleAuthorizationCodeFlow flow;
-            try {
-                flow = googleService.getFlow();
-                TokenResponse response = flow.newTokenRequest(decodeCode).setRedirectUri(redirectUri).execute();
-                if (null != session.getAttribute("userId")) {
-                    userId = (String) session.getAttribute("userId");
-                }
+        final String redirectUri = buildRedirectUri(request, getConfiguration().getoAuth2CallbackUrl());
 
-                if (null == userId) {
-                    LOG.error("userId in Session i NULL in Callback");
-                    throw new ServletException(
-                            "Error when trying to add Google acocunt : userId is NULL is User Session");
-                }
+        final String userId = getUserid(session);
+        try {
+            final GoogleAuthorizationCodeFlow flow = super.getFlow();
+            final TokenResponse response = flow.newTokenRequest(decodedCode).setRedirectUri(redirectUri).execute();
 
-                Credential credential = flow.createAndStoreCredential(response, userId);
-                if (LOG.isDebugEnabled()) {
-                    if (null != credential && null != credential.getAccessToken()) {
-                        LOG.debug("New user credential stored with userId : " + userId + "partial AccessToken : "
-                                + credential.getAccessToken().substring(0, 8));
-                    } else {
-                        LOG.warn("Trying to store a NULL AccessToken for user : " + userId);
-                    }
-                }
-                // onSuccess(request, resp, credential);
-            } catch (IOException e) {
-                LOG.error("Exception while trying to store user Credential", e);
+            final Credential credential = flow.createAndStoreCredential(response, userId);
+            if (null == credential || null == credential.getAccessToken()) {
+                LOG.warn("Trying to store a NULL AccessToken for user : " + userId);
             }
 
-            return "redirect:/";
+            if (LOG.isDebugEnabled()) {
+                if (null != credential && null != credential.getAccessToken()) {
+                    LOG.debug("New user credential stored with userId : " + userId + "partial AccessToken : "
+                            + credential.getAccessToken().substring(0, 8));
+                }
+            }
+            // onSuccess(request, resp, credential);
+        } catch (IOException e) {
+            LOG.error("Exception while trying to store user Credential", e);
+            throw new ServletException("Error while trying to conenct Google Account");
         }
+
+        return "redirect:/";
     }
 
-    protected String buildRedirectUri(HttpServletRequest req, String destination) {
-        GenericUrl url = new GenericUrl(req.getRequestURL().toString());
+    /**
+     * retrieve the User ID in Session.
+     * @param session the HTTP Session
+     * @return the current User Id in Session
+     * @throws ServletException if no User Id in session
+     */
+    private String getUserid(final HttpSession session) throws ServletException {
+        String userId = null;
+        if (null != session && null != session.getAttribute("userId")) {
+            userId = (String) session.getAttribute("userId");
+        }
+
+        if (null == userId) {
+            LOG.error("userId in Session is NULL in Callback");
+            throw new ServletException("Error when trying to add Google acocunt : userId is NULL is User Session");
+        }
+        return userId;
+    }
+
+    /**
+     * Extract OAuth2 Google code (from URL) and decode it.
+     * @param request the HTTP request to extract OAuth2 code
+     * @return the decoded code
+     * @throws ServletException if the code cannot be decoded
+     */
+    private String extracCode(final HttpServletRequest request) throws ServletException {
+        final StringBuffer buf = request.getRequestURL();
+        if (null != request.getQueryString()) {
+            buf.append('?').append(request.getQueryString());
+        }
+        final AuthorizationCodeResponseUrl responseUrl = new AuthorizationCodeResponseUrl(buf.toString());
+        final String decodeCode = responseUrl.getCode();
+
+        if (decodeCode == null) {
+            throw new MissingServletRequestParameterException("code", "String");
+        }
+
+        if (null != responseUrl.getError()) {
+            LOG.error("Error when trying to add Google acocunt : " + responseUrl.getError());
+            throw new ServletException("Error when trying to add Google acocunt");
+            // onError(request, resp, responseUrl);
+        }
+
+        return decodeCode;
+    }
+
+    /**
+     * Build a current host (and port) absolute URL.
+     * @param req         The current HTTP request to extract schema, host, port
+     *                    informations
+     * @param destination the "path" to the resource
+     * @return an absolute URI
+     */
+    protected String buildRedirectUri(final HttpServletRequest req, final String destination) {
+        final GenericUrl url = new GenericUrl(req.getRequestURL().toString());
         url.setRawPath(destination);
         return url.build();
     }
@@ -143,7 +186,7 @@ public class Auth extends GoogleService {
 
     @Override
     protected List<String> getScopes() {
-        List<String> allScopes = new ArrayList<>(GmailService.SCOPES);
+        final List<String> allScopes = new ArrayList<>(GmailService.SCOPES);
         allScopes.addAll(AppPeopleService.SCOPES);
         allScopes.addAll(CalendarService.SCOPES);
         return allScopes;
