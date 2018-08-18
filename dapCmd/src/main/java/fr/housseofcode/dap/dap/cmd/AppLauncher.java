@@ -1,9 +1,12 @@
 package fr.housseofcode.dap.dap.cmd;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +28,8 @@ public final class AppLauncher {
     public static final String DEFAULT_WS_URL = "http://localhost:8080";
     /** the userId to display informations about. */
     private static String userId;
+    /** action to perform, "display" or "add". **/
+    private static String action = "display";
 
     /**
      * Main entry Point.
@@ -41,23 +46,49 @@ public final class AppLauncher {
 
         if (args.length > 0) {
             userId = args[0];
-        } else {
+        }
+        if (args.length > 1) {
+            action = args[1];
+        }
+
+        if (null == userId) {
             System.err.println("An argument required, dap UserId");
             System.exit(0);
         }
 
-        System.out.println("Labels : " + get(buildUrl("/emails/labels", userId)));
-        System.out.println("Nb emails non lus : " + get(buildUrl("/emails/unread/count", userId)));
-        System.out.println("Prochains évènement : " + get(buildUrl("/events/next", userId)));
+        LOG.debug("Command Line userId : " + userId + ", action : " + action);
+
+        if ("add".equals(action)) {
+            final String url = buildUrl("/account/add/" + userId);
+            URI uri = null;
+            try {
+                uri = new URI(url);
+            } catch (URISyntaxException e) {
+                LOG.error("URI cannot be created with URL : " + url, e);
+                System.err.println("Cannot add Account (bad URI)");
+            }
+            try {
+                if (null != uri) {
+                    Desktop.getDesktop().browse(uri);
+                }
+            } catch (IOException e) {
+                LOG.error("URI cannot be open : " + url, e);
+                System.err.println("Cannot add Account (Cannot open Web browser)");
+            }
+            System.out.println("Account : " + userId + " added ! ");
+        } else {
+        System.out.println("Labels : " + get(buildUrl("/emails/labels")));
+        System.out.println("Nb emails non lus : " + get(buildUrl("/emails/unread/count")));
+        System.out.println("Prochains évènement : " + get(buildUrl("/events/next")));
+        }
     }
 
     /**
      * Build a URL to DaP WS.
      * @param path   service specific path
-     * @param userId the user ID account
      * @return a full URL
      */
-    private static String buildUrl(final String path, final String userId) {
+    private static String buildUrl(final String path) {
         final StringBuilder builder = new StringBuilder();
         builder.append(DEFAULT_WS_URL).append(path).append("?userId=").append(userId);
         return builder.toString();
