@@ -161,4 +161,20 @@ public class DapWSClient {
         return response;
     }
 
+    /**
+     * @return the wsMainUrl
+     */
+    public String getWsMainUrl() {
+        return wsMainUrl;
+    }
+
+    /**
+     * @param newWsMainUrl the wsMainUrl to set
+     * @return this object (chain method call)
+     */
+    public DapWSClient setWsMainUrl(final String newWsMainUrl) {
+        this.wsMainUrl = newWsMainUrl;
+        return this;
+    }
+
 }

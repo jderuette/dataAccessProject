@@ -42,8 +42,10 @@ public final class Launcher {
      * @param args command line parameters.
      */
     public static void main(final String[] args) {
-        configuration = new Config("djer13");
+        configuration = Config.get().setUser("djer13");
+        DapWSClient.get().setWsMainUrl("http://localhost:8080");
         mainWindow = new MainWindow("House of Code - Data Access Project");
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

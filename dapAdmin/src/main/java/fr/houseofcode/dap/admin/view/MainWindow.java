@@ -4,6 +4,7 @@
 package fr.houseofcode.dap.admin.view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -21,32 +22,20 @@ import org.apache.logging.log4j.Logger;
  * @author djer
  */
 public class MainWindow extends JFrame {
-    /**
-     * serialVersionUID.
-     */
+    /** serialVersionUID. */
     private static final long serialVersionUID = 3606250506110105509L;
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LogManager.getLogger();
 
-    /**
-     * Default Main Window Height.
-     */
+    /** Default Main Window Height. */
     private static final int WINDOW_HEIGHT = 800;
-    /**
-     * Default Main Window Width.
-     */
+    /** Default Main Window Width. */
     private static final int WINDOW_WIDTH = 600;
-    /**
-     * Panel displayed by default when JFram is loaded.
-     */
+    /** Panel displayed by default when JFram is loaded. */
     private JPanel mainPanel = new JPanel();
 
-    /***
-     * Default title. Can be change with constructor.
-     */
+    /** Default title. Can be change with constructor. */
     private String defaultTitle = "House of Code - DAP Admin";
 
     /** Display next event informations. */
@@ -60,8 +49,12 @@ public class MainWindow extends JFrame {
 
     /** Store button for user actions. */
     private JPanel actionsPan;
-    /** to refresh Data. */
+    /** To refresh Data. */
     private JButton refreshButton;
+    /** To display client configuration. */
+    private JButton configButton;
+    /** The configuration widow. */
+    private ConfigWindow configWindow;
 
     /**
      * Create the MainWindow. Will automatically call the "init" method.
@@ -96,6 +89,9 @@ public class MainWindow extends JFrame {
         this.setContentPane(mainPanel);
 
         this.setLayout(new BorderLayout());
+
+        configWindow = new ConfigWindow();
+
         nextEventLabel = new JLabel("unknow");
 
         nbUnreadEmailsLabel = new JLabel("");
@@ -107,6 +103,21 @@ public class MainWindow extends JFrame {
         actionsPan = new JPanel();
         refreshButton = new JButton("Rafraichir");
         actionsPan.add(refreshButton);
+        configButton = new JButton("Config");
+        configButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent event) {
+                if (configWindow.isVisible()) {
+                    configWindow.setVisible(false);
+                } else {
+                    configWindow.setVisible(true);
+                }
+            }
+        });
+
+        actionsPan.add(configButton);
+
 
         getContentPane().add(emailLabelsPane, BorderLayout.CENTER);
         getContentPane().add(nbUnreadEmailsLabel, BorderLayout.NORTH);
