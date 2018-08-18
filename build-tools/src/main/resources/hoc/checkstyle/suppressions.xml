@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+"-//Checkstyle//DTD SuppressionFilter Configuration 1.1//EN"
+"https://checkstyle.org/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <!-- No package-info on test, the package-info should be in src/main/java source folder -->
+    <suppress checks="JavadocPackage" files=".*Test\.java" /><!-- src[/\\][/\\]]test[/\\]java[/\\].*Test.*\.java -->
+    <suppress files="[/\\]target[/\\]" checks=".*"/>
+</suppressions>
+
