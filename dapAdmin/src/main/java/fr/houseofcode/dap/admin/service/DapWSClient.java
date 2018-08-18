@@ -13,6 +13,8 @@ import java.util.concurrent.FutureTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import fr.houseofcode.dap.admin.Config;
+
 /**
  * @author djer
  */
@@ -45,51 +47,69 @@ public class DapWSClient {
     }
 
     /**
-     * Get the next Event for "me".
-     * @return a string representation of the next Event
+     * Build a URL to DaP WS.
+     * @param path   service specific path
+     * @param userId the user ID account
+     * @return a full URL
      */
-    public String getNextEvent() {
-        return getNextEvent("me");
+    private String buildUrl(final String path, final String userId) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(wsMainUrl).append(path).append("?userId=").append(userId);
+        return builder.toString();
     }
 
     /**
      * Get the next Event for "me".
+     * @param userConfig The user Id used to store Account connection
      * @return a string representation of the next Event
      */
-    public String getNextEvent(final String user) {
-        return get(wsMainUrl + "/events/next/" + user);
+    public String getNextEvent(final Config userConfig) {
+        return getText(buildUrl("/events/next", userConfig.getUser()));
     }
 
     /**
-     * Retrieve the current user email Labels.
-     * @return a string representation fo Labels
+     * Retrieve main Box user message labels.
+     * @param userConfig The user Id used to store Account connection
+     * @return a String representation of the e-mails Labels
      */
-    public String getEmailLabels() {
-        return getEmailLabels("me");
-    }
-
-    private String getEmailLabels(final String user) {
-        return get(wsMainUrl + "/emails/labels/" + user);
+    public String getEmailLabels(final Config userConfig) {
+        return getText(buildUrl("/emails/labels", userConfig.getUser()));
     }
 
     /**
-     * Retrieve the current user number of unread e-mails (in his main Box).
+     * Retrieve the number of unread e-mail in User main Box.
+     * @param userConfig The user Id used to store Account connection
      * @return the number of unread e-mails
      */
-    public String getNbUnreadEmails() {
-        return getNbUnreadEmails("me");
-    }
-
-    private String getNbUnreadEmails(final String user) {
-        return get(wsMainUrl + "/emails/unread/count/" + user);
+    public String getNbUnreadEmails(final Config userConfig) {
+        return getText(buildUrl("/emails/unread/count", userConfig.getUser()));
     }
 
     /**
      * Retrieve Data from DaP WS.
      * @param wsPath path to query
-     * @return the data from DaP
+     * @return the data from DaP in JSON format
      */
     private String get(final String wsPath) {
+        return get(wsPath, "application/json");
+    }
+
+    /**
+     * Retrieve Data from DaP WS.
+     * @param wsPath path to query
+     * @return the data from DaP in text format
+     */
+    private String getText(final String wsPath) {
+        return get(wsPath, "text/plain");
+    }
+
+    /**
+     * Retrieve Data from DaP WS.
+     * @param wsPath       path to query
+     * @param acceptedData accepted data format for the response
+     * @return the data from DaP
+     */
+    private String get(final String wsPath, final String acceptedData) {
         String response = null;
         final Callable<String> externaleCall = new Callable<String>() {
 
@@ -101,33 +121,27 @@ public class DapWSClient {
                     final URL url = new URL(wsPath);
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Accept", "application/json");
+                    conn.setRequestProperty("Accept", acceptedData);
 
                     if (conn.getResponseCode() != STATUS_CODE_OK) {
                         LOG.error("Bad HTTP Response on " + wsPath + " : " + conn.getResponseCode());
+                        response.append("Error");
                         // throw new RuntimeException("Failed : HTTP error code : " +
                         // conn.getResponseCode());
-                    }
+                    } else {
+                        final BufferedReader responseBufferedReader = new BufferedReader(
+                                new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
 
-                    final BufferedReader responseBufferedReader = new BufferedReader(
-                            new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
-
-                    String output;
-                    while ((output = responseBufferedReader.readLine()) != null) {
-                        response.append(output);
-                    }
-                    responseBufferedReader.close();
-                    conn.disconnect();
-                } catch (IOException e) {
-                    LOG.error("Error while calling WS on " + wsPath, e);
-                    if (null != conn) {
-                        try {
-                            conn.getInputStream().close();
-                        } catch (IOException e1) {
-                            LOG.error("WS connection cannot be (force) closed on " + wsPath, e1);
+                        String output;
+                        while ((output = responseBufferedReader.readLine()) != null) {
+                            response.append(output);
                         }
+                        responseBufferedReader.close();
                         conn.disconnect();
                     }
+                } catch (IOException e) {
+                    LOG.error("Error while calling WS on " + wsPath, e);
+                    conn.disconnect();
                     response.append("Error");
                 }
                 return response.toString();

@@ -2,8 +2,8 @@ package fr.houseofcode.dap.ws.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,9 +26,9 @@ public class Events {
      * @param userId The user ID used to store the credentials
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{userId}", consumes = "!"
-            + MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "text/plain")
-    public String nextEvent(@PathVariable final String userId) {
+    @RequestMapping(path = "/next", consumes = "!"
+            + MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String nextEvent(@RequestParam final String userId) {
         return googleFacade.display(userId, googleFacade.getNextEvent(userId));
     }
 
@@ -37,9 +37,9 @@ public class Events {
      * @param userId The user ID used to store the credentials
      * @return informations about he next Event
      */
-    @RequestMapping(value = "/next/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/next", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Event nextEventJson(@PathVariable final String userId) {
+    public Event nextEventJson(@RequestParam final String userId) {
         return googleFacade.getNextEvent(userId);
     }
 

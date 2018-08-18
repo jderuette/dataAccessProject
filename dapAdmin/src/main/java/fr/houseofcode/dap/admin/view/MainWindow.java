@@ -53,8 +53,8 @@ public class MainWindow extends JFrame {
     private JLabel nextEventLabel;
     /** Display number of unread e-mails. */
     private JLabel nbUnreadEmailsLabel;
-    /** Allow scroll for e-mails labels. */
-    private JScrollPane emailLabels;
+    /** Display e-mails Labels. */
+    private JScrollPane emailLabelsPane;
     /** Display e-mails Labels. */
     private JTextArea emailLabelsArea;
 
@@ -99,16 +99,16 @@ public class MainWindow extends JFrame {
         nextEventLabel = new JLabel("unknow");
 
         nbUnreadEmailsLabel = new JLabel("");
-        emailLabels = new JScrollPane();
         emailLabelsArea = new JTextArea("");
         emailLabelsArea.setLineWrap(true);
-        emailLabels.add(emailLabelsArea);
+        emailLabelsPane = new JScrollPane(emailLabelsArea);
+        emailLabelsPane.setVisible(true);
 
         actionsPan = new JPanel();
         refreshButton = new JButton("Rafraichir");
         actionsPan.add(refreshButton);
 
-        getContentPane().add(emailLabels, BorderLayout.CENTER);
+        getContentPane().add(emailLabelsPane, BorderLayout.CENTER);
         getContentPane().add(nbUnreadEmailsLabel, BorderLayout.NORTH);
         getContentPane().add(nextEventLabel, BorderLayout.SOUTH);
         getContentPane().add(actionsPan, BorderLayout.WEST);

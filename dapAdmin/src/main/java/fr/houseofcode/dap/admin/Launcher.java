@@ -26,6 +26,9 @@ public final class Launcher {
     /** The main Windows. */
     private static MainWindow mainWindow;
 
+    /** User Configuration. */
+    private static Config configuration;
+
     /**
      * Utility CLass.
      */
@@ -39,6 +42,7 @@ public final class Launcher {
      * @param args command line parameters.
      */
     public static void main(final String[] args) {
+        configuration = new Config("djer13");
         mainWindow = new MainWindow("House of Code - Data Access Project");
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -73,21 +77,21 @@ public final class Launcher {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final String nextEvent = DapWSClient.get().getNextEvent();
+                final String nextEvent = DapWSClient.get().getNextEvent(configuration);
                 mainWindow.setNextEvent(nextEvent);
             }
         });
     }
 
     /**
-     * Update (refresh) emails informations.
+     * Update (refresh) e-mails informations.
      */
     private static void updateEmails() {
         mainWindow.resetEmailsLabels();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final String labels = DapWSClient.get().getEmailLabels();
+                final String labels = DapWSClient.get().getEmailLabels(configuration);
                 // Ugly
                 final String formatedLabels = labels.replaceAll("- ", "\n");
                 mainWindow.setEmailsLabels(formatedLabels);
@@ -98,7 +102,7 @@ public final class Launcher {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final String nbUnreadEmails = DapWSClient.get().getNbUnreadEmails();
+                final String nbUnreadEmails = DapWSClient.get().getNbUnreadEmails(configuration);
                 mainWindow.setNbUnreadEmails(nbUnreadEmails);
             }
         });

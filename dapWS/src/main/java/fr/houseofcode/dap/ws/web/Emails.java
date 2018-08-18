@@ -1,15 +1,19 @@
 package fr.houseofcode.dap.ws.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.api.services.gmail.model.Label;
 
 import fr.houseofcode.dap.ws.GoogleFacade;
 
 /**
  * @author djer
- *
  */
 @RestController
 @RequestMapping("/emails")
@@ -24,9 +28,19 @@ public class Emails {
      * @param userId The user ID used to store the credentials
      * @return a string representation of labels
      */
-    @RequestMapping("/labels/{userId}")
-    public String getLabels(@PathVariable final String userId) {
+    @RequestMapping(path = "/labels", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String getLabels(@RequestParam final String userId) {
         return googleFacade.buildInboxLabels(userId);
+    }
+
+    /**
+     * Retrieve the Google Labels.
+     * @param userId The user ID used to store the credentials
+     * @return a string representation of labels
+     */
+    @RequestMapping(path = "/labels", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Label> getLabelsJson(@RequestParam final String userId) {
+        return googleFacade.getInboxLabels(userId);
     }
 
     /**
@@ -34,9 +48,8 @@ public class Emails {
      * @param userId The user ID used to store the credentials
      * @return the number of unread email
      */
-    @RequestMapping("/unread/count/{userId}")
-    public String getNbunreadEmail(@PathVariable final String userId) {
+    @RequestMapping(path = "/unread/count", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String getNbunreadEmail(@RequestParam final String userId) {
         return googleFacade.getNbUnreadEmail(userId);
     }
-
 }

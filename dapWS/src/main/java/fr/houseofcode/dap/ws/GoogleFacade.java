@@ -101,20 +101,28 @@ public class GoogleFacade {
     /**
      * retrieve all label from a Google Account.
      * @param user The user ID or "me"
+     * @return a List of Google Label Objects
+     */
+    public List<Label> getInboxLabels(final String user) {
+        final GmailService service = new GmailService(configuration);
+        return service.getInboxLabels(user);
+    }
+
+    /**
+     * retrieve all label from a Google Account.
+     * @param user The user ID or "me"
      * @return a string representation of all labels
      */
     public String buildInboxLabels(final String user) {
         final StringBuilder allLabels = new StringBuilder();
-        final GmailService service = new GmailService(configuration);
 
-        final List<Label> labels = service.getInboxLabels(user);
+        final List<Label> labels = getInboxLabels(user);
 
         if (null == labels) {
             allLabels.append("No labels found.");
         } else if (labels.isEmpty()) {
             allLabels.append("No labels found.");
         } else {
-            allLabels.append("Labels:");
             for (final Label label : labels) {
                 allLabels.append(String.format("- %s%n", label.getName()));
             }
@@ -125,7 +133,7 @@ public class GoogleFacade {
 
     /**
      * Display an event as simple string for user.
-     * @param user
+     * @param user  the User id
      * @param event The event to display
      * @return A simple string representation of the event
      */
