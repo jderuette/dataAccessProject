@@ -57,11 +57,11 @@ public final class Config {
     }
 
     /**
-     * @param dapUrl the dapUrl to set
+     * @param newDapUrl the DaP Url to set
      * @return this object (chain method call)
      */
-    public Config setDapUrl(String dapUrl) {
-        this.dapUrl = dapUrl;
+    public Config setDapUrl(final String newDapUrl) {
+        this.dapUrl = newDapUrl;
         return this;
     }
 }

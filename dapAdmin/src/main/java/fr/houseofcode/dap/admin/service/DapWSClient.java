@@ -86,6 +86,15 @@ public class DapWSClient {
     }
 
     /**
+     * Build a URL to create a new Account.
+     * @param accountName the account name
+     * @return the string URL to open in a browser to create a new account
+     */
+    public String buildCreateAccounbtUrl(final String accountName) {
+        return buildUrl("/account/add/" + accountName, accountName);
+    }
+
+    /**
      * Retrieve Data from DaP WS.
      * @param wsPath path to query
      * @return the data from DaP in JSON format
@@ -176,5 +185,4 @@ public class DapWSClient {
         this.wsMainUrl = newWsMainUrl;
         return this;
     }
-
 }

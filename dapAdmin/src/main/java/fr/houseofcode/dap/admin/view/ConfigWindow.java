@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.houseofcode.dap.admin.view;
 
 import java.awt.BorderLayout;
@@ -29,9 +26,9 @@ public class ConfigWindow extends JFrame {
     private static final Logger LOG = LogManager.getLogger();
 
     /** Default Main Window Height. */
-    private static final int WINDOW_HEIGHT = 400;
+    private static final int WINDOW_HEIGHT = 200;
     /** Default Main Window Width. */
-    private static final int WINDOW_WIDTH = 200;
+    private static final int WINDOW_WIDTH = 400;
     /** Panel displayed by default when JFram is loaded. */
     private JPanel mainPanel = new JPanel();
 
@@ -58,8 +55,11 @@ public class ConfigWindow extends JFrame {
      * Initialize the Windows.
      */
     private void init() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(new StringBuilder().append("Init : ConfigWindow").toString());
+        }
         this.setTitle("Dap Confiuration");
-        this.setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
+        this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setContentPane(mainPanel);
@@ -91,10 +91,8 @@ public class ConfigWindow extends JFrame {
         actionPanel = new JPanel();
         actionPanel.add(saveButton);
 
-
         getContentPane().add(fieldListPane, BorderLayout.CENTER);
         getContentPane().add(actionPanel, BorderLayout.SOUTH);
-
     }
 
 }

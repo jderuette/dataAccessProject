@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,9 +30,9 @@ public class MainWindow extends JFrame {
     private static final Logger LOG = LogManager.getLogger();
 
     /** Default Main Window Height. */
-    private static final int WINDOW_HEIGHT = 800;
+    private static final int WINDOW_HEIGHT = 600;
     /** Default Main Window Width. */
-    private static final int WINDOW_WIDTH = 600;
+    private static final int WINDOW_WIDTH = 800;
     /** Panel displayed by default when JFram is loaded. */
     private JPanel mainPanel = new JPanel();
 
@@ -55,6 +56,10 @@ public class MainWindow extends JFrame {
     private JButton configButton;
     /** The configuration widow. */
     private ConfigWindow configWindow;
+    /** to Create a new DaP Account. */
+    private JButton createAccountButton;
+    /** The account creation windows. */
+    private CreateAccountWindow createAccountWindow;
 
     /**
      * Create the MainWindow. Will automatically call the "init" method.
@@ -83,7 +88,7 @@ public class MainWindow extends JFrame {
                     .toString());
         }
         this.setTitle(getDefaultTitle());
-        this.setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
+        this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setContentPane(mainPanel);
@@ -91,6 +96,8 @@ public class MainWindow extends JFrame {
         this.setLayout(new BorderLayout());
 
         configWindow = new ConfigWindow();
+
+        createAccountWindow = new CreateAccountWindow();
 
         nextEventLabel = new JLabel("unknow");
 
@@ -101,6 +108,7 @@ public class MainWindow extends JFrame {
         emailLabelsPane.setVisible(true);
 
         actionsPan = new JPanel();
+        actionsPan.setLayout(new BoxLayout(actionsPan, BoxLayout.Y_AXIS));
         refreshButton = new JButton("Rafraichir");
         actionsPan.add(refreshButton);
         configButton = new JButton("Config");
@@ -117,6 +125,20 @@ public class MainWindow extends JFrame {
         });
 
         actionsPan.add(configButton);
+
+        createAccountButton = new JButton("Créer un compte");
+        createAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent event) {
+                if (createAccountWindow.isVisible()) {
+                    createAccountWindow.setVisible(false);
+                } else {
+                    createAccountWindow.setVisible(true);
+                }
+            }
+        });
+
+        actionsPan.add(createAccountButton);
 
 
         getContentPane().add(emailLabelsPane, BorderLayout.CENTER);
@@ -190,6 +212,14 @@ public class MainWindow extends JFrame {
      */
     public void addRefreshCallback(final ActionListener actionListener) {
         refreshButton.addActionListener(actionListener);
+    }
+
+    /**
+     * Allow to handle user action on "create account".
+     * @param accountListener the action listener to call
+     */
+    public void addCreateAccountListner(final AccountToCreate accountListener) {
+        createAccountWindow.addAccountToAddListener(accountListener);
     }
 
     /**

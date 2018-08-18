@@ -3,8 +3,12 @@ package fr.houseofcode.dap.admin;
  * Data Access Project Launcher.
  */
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.SwingUtilities;
 
@@ -12,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.houseofcode.dap.admin.service.DapWSClient;
+import fr.houseofcode.dap.admin.view.AccountToCreate;
 import fr.houseofcode.dap.admin.view.MainWindow;
 
 /**
@@ -68,6 +73,13 @@ public final class Launcher {
             }
         });
 
+        mainWindow.addCreateAccountListner(new AccountToCreate() {
+            @Override
+            public void accountToAdd(final String accountName) {
+                createAccount(accountName);
+            }
+        });
+
         mainWindow.display();
     }
 
@@ -75,6 +87,9 @@ public final class Launcher {
      * Update (refresh) events informations.
      */
     private static void updateEvents() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(new StringBuilder().append("Updating Events Infos").toString());
+        }
         mainWindow.resetNextEvent();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -89,6 +104,9 @@ public final class Launcher {
      * Update (refresh) e-mails informations.
      */
     private static void updateEmails() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(new StringBuilder().append("Updating emails Infos").toString());
+        }
         mainWindow.resetEmailsLabels();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -108,5 +126,30 @@ public final class Launcher {
                 mainWindow.setNbUnreadEmails(nbUnreadEmails);
             }
         });
+    }
+
+    /**
+     * Create a new Account and ask the user to connect his Google Account.
+     * @param accountName the name of the new Account
+     */
+    private static void createAccount(final String accountName) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(new StringBuilder().append("Creating account with name :").append(accountName).toString());
+        }
+        final String url = DapWSClient.get().buildCreateAccounbtUrl(accountName);
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            LOG.error("URI cannot be created with URL : " + url, e);
+        }
+        try {
+            if (null != uri) {
+                Desktop.getDesktop().browse(uri);
+            }
+        } catch (IOException e) {
+            LOG.error("URI cannot be open : " + url, e);
+        }
+
     }
 }
