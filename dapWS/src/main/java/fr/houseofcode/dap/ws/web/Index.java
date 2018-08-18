@@ -5,17 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author djer
- *
  */
 @RestController
 public class Index {
-
-    /**
-     * Default constructor.
-     */
-    public Index() {
-        super();
-    }
 
     /**
      * A basic Controller to test.
@@ -25,5 +17,4 @@ public class Index {
     public String index() {
         return "Bonjour et bienvenu dans votre application de gestion et centralisation de vos données";
     }
-
 }

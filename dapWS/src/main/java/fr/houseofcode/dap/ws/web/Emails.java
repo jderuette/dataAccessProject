@@ -20,13 +20,6 @@ public class Emails {
     private GoogleFacade googleFacade;
 
     /**
-     * Emails.
-     */
-    public Emails() {
-        // TODO Auto-generated constructor stub
-    }
-
-    /**
      * Retrieve the Google Labels.
      * @param userId The user ID used to store the credentials
      * @return a string representation of labels

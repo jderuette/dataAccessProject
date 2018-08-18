@@ -22,13 +22,6 @@ public class Events {
     private GoogleFacade googleFacade;
 
     /**
-     * DataAccesProjects Event component.
-     */
-    public Events() {
-        super();
-    }
-
-    /**
      * Display the next Event.
      * @param userId The user ID used to store the credentials
      * @return informations about he next Event
