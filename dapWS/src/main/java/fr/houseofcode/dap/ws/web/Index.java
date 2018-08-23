@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author djer
  */
 @RestController
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public class Index {
 
     /**

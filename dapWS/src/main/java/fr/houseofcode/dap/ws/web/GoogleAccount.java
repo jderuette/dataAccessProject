@@ -37,6 +37,10 @@ public class GoogleAccount extends GoogleService {
 
     /** Logger. */
     private static final Logger LOG = LogManager.getLogger();
+    /** First char to display when sensible data need to be displayed. */
+    private static final int SENSIBLE_DATA_FIRST_CHAR = 0;
+    /** Last char to display when sensible data need to be displayed. */
+    private static final int SENSIBLE_DATA_LAST_CHAR = 8;
 
     /**
      * @param config The Application configuration
@@ -108,7 +112,8 @@ public class GoogleAccount extends GoogleService {
             if (LOG.isDebugEnabled()) {
                 if (null != credential && null != credential.getAccessToken()) {
                     LOG.debug("New user credential stored with userId : " + userId + "partial AccessToken : "
-                            + credential.getAccessToken().substring(0, 8));
+                            + credential.getAccessToken().substring(SENSIBLE_DATA_FIRST_CHAR,
+                                    SENSIBLE_DATA_LAST_CHAR));
                 }
             }
             // onSuccess(request, resp, credential);

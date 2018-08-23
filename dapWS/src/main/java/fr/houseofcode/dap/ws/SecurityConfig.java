@@ -4,6 +4,8 @@ package fr.houseofcode.dap.ws;
  * @author djer
  */
 //@EnableWebSecurity
+
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public class SecurityConfig /* extends WebSecurityConfigurerAdapter */ {
 
 //    @Override

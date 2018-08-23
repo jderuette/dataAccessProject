@@ -7,7 +7,7 @@ import java.awt.Dimension;
  * @author djer
  *
  */
-public final class Constantes {
+public final class ConstantesUtils {
 
     /** default text Field dimensions. */
     public static final Dimension DEFAULT_TEXT_FIELD_DIMENSION = new Dimension(200, 20);
@@ -18,7 +18,7 @@ public final class Constantes {
     /**
      * Utility class.
      */
-    private Constantes() {
+    private ConstantesUtils() {
         throw new UnsupportedOperationException("Utility Class");
     }
 

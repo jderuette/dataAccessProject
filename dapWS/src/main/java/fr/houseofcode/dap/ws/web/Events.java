@@ -16,6 +16,7 @@ import fr.houseofcode.dap.ws.GoogleFacade;
  */
 @RestController
 @RequestMapping("/events")
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public class Events {
     /** Google facade. */
     @Autowired

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.houseofcode.dap.admin.view;
 
 import java.util.EventListener;

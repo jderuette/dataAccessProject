@@ -17,7 +17,7 @@ import javax.swing.event.EventListenerList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.houseofcode.dap.admin.Constantes;
+import fr.houseofcode.dap.admin.ConstantesUtils;
 
 /**
  * @author djer
@@ -77,7 +77,7 @@ public class CreateAccountWindow extends JFrame {
         userAccountLabel = new JLabel("Id du compte");
         accountPanel.add(userAccountLabel);
         userAccountId = new JTextField();
-        userAccountId.setPreferredSize(Constantes.DEFAULT_TEXT_FIELD_DIMENSION);
+        userAccountId.setPreferredSize(ConstantesUtils.DEFAULT_TEXT_FIELD_DIMENSION);
         accountPanel.add(userAccountId);
 
         createButton = new JButton("Créer !");
@@ -85,7 +85,7 @@ public class CreateAccountWindow extends JFrame {
             @Override
             public void actionPerformed(final ActionEvent event) {
                 if (null == userAccountId.getText() || "".equals(userAccountId.getText())) {
-                    userAccountId.setCaretColor(Constantes.ERROR_BACKGROUND_COLOR);
+                    userAccountId.setCaretColor(ConstantesUtils.ERROR_BACKGROUND_COLOR);
                 } else {
                     final AccountToCreate[] listners = eventListenerList.getListeners(AccountToCreate.class);
                     if (listners.length > 0) {
