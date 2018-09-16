@@ -13,12 +13,15 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.client.util.store.MemoryDataStoreFactory;
 
 import fr.houseofcode.dap.ws.Config;
 import fr.houseofcode.dap.ws.GoogleFacade;
@@ -73,11 +76,42 @@ public abstract class GoogleService {
     }
 
     /**
+     * Retrieve all users Tokens.
+     * @return A Map, userid as key, and token data as Value @see
+     *         DataStore<StoredCredential>
+     * @throws IOException if Google error occurs
+     */
+    public DataStore<StoredCredential> getAllCredentials() {
+        DataStore<StoredCredential> response = null;
+
+        try {
+            response = getFlow().getCredentialDataStore();
+        } catch (IOException ioe) {
+            getLog().error("Error while trying to load Google Flow", ioe);
+            // fake DataStore to implements Null Safe Pattern
+            try {
+                response = MemoryDataStoreFactory.getDefaultInstance().getDataStore("fake");
+            } catch (IOException ioe2) {
+                // No Null Safe :-(
+                getLog().error("Cannot create a fake memoryDataStore", ioe2);
+            }
+        }
+
+        return response;
+//        Iterator<String> itUsersKey = getFlow().getCredentialDataStore().keySet().iterator();
+//        while(itUsersKey.hasNext()) {
+//            String userKey = itUsersKey.next();
+//            StoredCredential userData = getFlow().getCredentialDataStore().get(userKey);
+//        }
+
+    }
+
+    /**
      * Initialize Google flow (if not already initialized) and return it.
      * @return a Google Authorization Flow
      * @throws IOException if Google Error occurs
      */
-    public GoogleAuthorizationCodeFlow getFlow() throws IOException {
+    protected GoogleAuthorizationCodeFlow getFlow() throws IOException {
         if (null == flow) {
                 flow = initializeFlow();
         }

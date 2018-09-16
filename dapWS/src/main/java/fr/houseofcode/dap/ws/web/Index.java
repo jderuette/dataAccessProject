@@ -1,12 +1,12 @@
 package fr.houseofcode.dap.ws.web;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author djer
  */
-@RestController
+@Controller
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public class Index {
 
@@ -16,6 +16,6 @@ public class Index {
      */
     @RequestMapping("/")
     public String index() {
-        return "Bonjour et bienvenu dans votre application de gestion et centralisation de vos données";
+        return "welcome";
     }
 }

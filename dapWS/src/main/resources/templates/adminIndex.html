@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0" />
+
+<meta name="description" content="The Dap trainning project admin" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Stack Overflow" />
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/dap.css}"/>
+
+<title th:text="#{admin.title}">Data Access Project Admin</title>
+
+</head>
+<body>
+	<div>
+		<h2 th:text="#{admin.message}">Admin welcome</h2>
+	</div>
+	<div id="content" th:unless="${#lists.isEmpty(usersTokens)}">
+	<h3 th:text="#{admin.tokens.title}">Users tokens</h3>
+		<table>
+			<thead>
+				<tr>
+					<td th:text="#{admin.tokens.userKey}">User Key</td>
+					<td th:text="#{admin.tokens.accessToken}">AccessToken</td>
+					<td th:text="#{admin.tokens.expireIn}">ExpirationTimeMilliseconds</td>
+					<td th:text="#{admin.tokens.refreshToken}">Refresh Token</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="userToken : ${usersTokens}">
+					<td th:text="${userToken.key}">User key</td>
+					<td th:text="${userToken.value.accessToken}">Google Token</td>
+					<td th:text="${userToken.value.expirationTimeMilliseconds}">Expires in</td>
+					<td th:text="${userToken.value.refreshToken}">Refresh Token</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

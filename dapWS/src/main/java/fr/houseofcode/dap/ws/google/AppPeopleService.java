@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -20,6 +21,7 @@ import fr.houseofcode.dap.ws.Config;
  * @author djer
  *
  */
+@Service
 public class AppPeopleService extends GoogleService {
 
     /**
