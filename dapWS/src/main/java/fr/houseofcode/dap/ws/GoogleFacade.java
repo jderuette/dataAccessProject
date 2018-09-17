@@ -22,9 +22,7 @@ import fr.houseofcode.dap.ws.google.GmailService;
  */
 @Service
 public class GoogleFacade {
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LogManager.getLogger();
 
     /** Application Configuration. */

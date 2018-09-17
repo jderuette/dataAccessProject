@@ -19,14 +19,14 @@
 		<h2 th:text="#{admin.message}">Admin welcome</h2>
 	</div>
 	<div id="content" th:unless="${#lists.isEmpty(usersTokens)}">
-	<h3 th:text="#{admin.tokens.title}">Users tokens</h3>
+	<h3 th:text="#{admin.token.title}">Users tokens</h3>
 		<table>
 			<thead>
 				<tr>
-					<td th:text="#{admin.tokens.userKey}">User Key</td>
-					<td th:text="#{admin.tokens.accessToken}">AccessToken</td>
-					<td th:text="#{admin.tokens.expireIn}">ExpirationTimeMilliseconds</td>
-					<td th:text="#{admin.tokens.refreshToken}">Refresh Token</td>
+					<td th:text="#{token.userKey.label}">User Key</td>
+					<td th:text="#{token.accessToken.label}">AccessToken</td>
+					<td th:text="#{token.expireIn.label}">ExpirationTimeMilliseconds</td>
+					<td th:text="#{token.refreshToken.label}">Refresh Token</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -35,6 +35,27 @@
 					<td th:text="${userToken.value.accessToken}">Google Token</td>
 					<td th:text="${userToken.value.expirationTimeMilliseconds}">Expires in</td>
 					<td th:text="${userToken.value.refreshToken}">Refresh Token</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div id="content" th:unless="${#lists.isEmpty(users)}">
+	<h3 th:text="#{admin.users.title}">Users</h3>
+		<table>
+			<thead>
+				<tr>
+					<td th:text="#{user.id.label}">User "public" Id</td>
+					<td th:text="#{admin.user.password.lenght.label}">Password
+						size</td>
+					<td th:text="#{admin.user.role.label}">Role</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${users}">
+					<td th:text="${user.userId}">User Id</td>
+					<td th:text="${user.password.length()}">17</td>
+					<td th:text="${user.role}">user</td>
 				</tr>
 			</tbody>
 		</table>

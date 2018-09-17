@@ -3,3 +3,5 @@
 table {border-collapse: collapse;}
 table td {border:1px solid black;}
 table thead td {font-weight:bold;}
+
+.error {color:red;}

@@ -19,6 +19,8 @@ public class AppLauncher {
     /** Application configuration. */
     @Autowired
     private Config configuration;
+    @Autowired
+    private DataInitializer dataInitializer;
 
     /**
      * Launcher for command line.
@@ -32,6 +34,7 @@ public class AppLauncher {
             configuration.init(System.getProperty("user.home") + System.getProperty("file.separator") + "houseOfCode"
                     + System.getProperty("file.separator") + "dataAccessProject", "Djer Data Access Project");
 
+            dataInitializer.init();
             // final GoogleFacade app = new GoogleFacade(configuration);
             // app.display("me");
 
