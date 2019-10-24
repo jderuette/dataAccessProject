@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.housseofcode.dap.dap.cmd;
 
 import java.io.BufferedReader;
@@ -34,7 +31,7 @@ public class DapClient {
      * @param userId the userId
      * @return the server response
      */
-    public static String getDapData(String path, String userId) {
+    public static String getDapData(final String path, final String userId) {
         return get(buildUrl(path, userId));
     }
 
