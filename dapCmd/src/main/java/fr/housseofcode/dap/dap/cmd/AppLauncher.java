@@ -21,11 +21,6 @@ public final class AppLauncher {
      */
     private static final Logger LOG = LogManager.getLogger();
 
-    /** Status code for a successful request. */
-    public static final int STATUS_CODE_OK = 200;
-
-    /** Default Dap WS URl. */
-    public static final String DEFAULT_WS_URL = "http://localhost:8080";
     /** the userId to display informations about. */
     private static String userId;
     /** action to perform, "display" or "add". **/
@@ -59,7 +54,7 @@ public final class AppLauncher {
         LOG.debug("Command Line userId : " + userId + ", action : " + action);
 
         if ("add".equals(action)) {
-            final String url = buildUrl("/account/add/" + userId);
+            final String url = DapClient.buildUrl("/account/add/" + userId, "");
             URI uri = null;
             try {
                 uri = new URI(url);
@@ -77,53 +72,10 @@ public final class AppLauncher {
             }
             System.out.println("Account : " + userId + " added ! ");
         } else {
-        System.out.println("Labels : " + get(buildUrl("/emails/labels")));
-        System.out.println("Nb emails non lus : " + get(buildUrl("/emails/unread/count")));
-        System.out.println("Prochains évènement : " + get(buildUrl("/events/next")));
+            System.out.println("Labels : " + DapClient.getDapData("/emails/labels", userId));
+            System.out.println("Nb emails non lus : " + DapClient.getDapData("/emails/unread/count", userId));
+            System.out.println("Prochains évènement : " + DapClient.getDapData("/events/next", userId));
         }
     }
 
-    /**
-     * Build a URL to DaP WS.
-     * @param path   service specific path
-     * @return a full URL
-     */
-    private static String buildUrl(final String path) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(DEFAULT_WS_URL).append(path).append("?userId=").append(userId);
-        return builder.toString();
-    }
-
-    /**
-     * Retrieve data from DaP server.
-     * @param wsPath path to query
-     * @return The response body from the server
-     */
-    private static String get(final String wsPath) {
-        final StringBuilder response = new StringBuilder();
-        try {
-            final URL url = new URL(wsPath);
-            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "text/plain");
-
-            if (conn.getResponseCode() == STATUS_CODE_OK) {
-                final BufferedReader responseBufferedReader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-
-                String output;
-                while ((output = responseBufferedReader.readLine()) != null) {
-                    response.append(output);
-                }
-                conn.disconnect();
-            } else {
-                LOG.error("Bad HTTP Response for : " + wsPath + " : " + conn.getResponseCode());
-            }
-
-        } catch (IOException e) {
-            LOG.error("Error while calling WS", e);
-        }
-
-        return response.toString();
-    }
 }
