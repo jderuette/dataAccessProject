@@ -19,6 +19,7 @@ public class AppLauncher {
     /** Application configuration. */
     @Autowired
     private Config configuration;
+    /** Classe to pré-laod Data into Database.*/
     @Autowired
     private DataInitializer dataInitializer;
 
@@ -31,8 +32,8 @@ public class AppLauncher {
     public CommandLineRunner commandLineRunner(final ApplicationContext ctx) {
         return args -> {
 
-            configuration.init(System.getProperty("user.home") + System.getProperty("file.separator") + "houseOfCode"
-                    + System.getProperty("file.separator") + "dataAccessProject", "Djer Data Access Project");
+            configuration.init(System.getProperty("user.home") + System.getProperty("file.separator") + "dap",
+                    "Djer Data Access Project");
 
             dataInitializer.init();
             // final GoogleFacade app = new GoogleFacade(configuration);

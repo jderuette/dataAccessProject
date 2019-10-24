@@ -33,10 +33,10 @@ public class AppUserDTO {
     }
 
     /**
-     * @param userId the userId to set
+     * @param newUserId the userId to set
      */
-    public void setUserId(final String userId) {
-        this.userId = userId;
+    public void setUserId(final String newUserId) {
+        this.userId = newUserId;
     }
 
     /**
@@ -47,10 +47,10 @@ public class AppUserDTO {
     }
 
     /**
-     * @param password the password to set
+     * @param newPassword the password to set
      */
-    public void setPassword(final String password) {
-        this.password = password;
+    public void setPassword(final String newPassword) {
+        this.password = newPassword;
     }
 
     /**
@@ -61,9 +61,9 @@ public class AppUserDTO {
     }
 
     /**
-     * @param role the role to set
+     * @param newRole the role to set
      */
-    public void setRole(final AppRole role) {
-        this.role = role;
+    public void setRole(final AppRole newRole) {
+        this.role = newRole;
     }
 }
