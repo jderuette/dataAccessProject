@@ -20,10 +20,10 @@ public class DapClient {
     private static final Logger LOG = LogManager.getLogger();
 
     /** Status code for a successful request. */
-    public static final int STATUS_CODE_OK = 200;
+    private static final int STATUS_CODE_OK = 200;
 
     /** Default Dap WS URl. */
-    public static final String DEFAULT_WS_URL = "http://localhost:8080";
+    private static final String DEFAULT_WS_URL = "http://localhost:8080";
 
     /**
      * Retrieve Data from the DaP server.
