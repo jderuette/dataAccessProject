@@ -77,9 +77,7 @@ public abstract class GoogleService {
 
     /**
      * Retrieve all users Tokens.
-     * @return A Map, userid as key, and token data as Value @see
-     *         DataStore<StoredCredential>
-     * @throws IOException if Google error occurs
+     * @return A Map, userid as key, and token data as Value see : @see DataStore
      */
     public DataStore<StoredCredential> getAllCredentials() {
         DataStore<StoredCredential> response = null;
