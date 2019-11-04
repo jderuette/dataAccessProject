@@ -78,7 +78,7 @@ public class GmailService extends GoogleService {
             listResponse = service.users().messages().list("me").setLabelIds(labels).setIncludeSpamTrash(Boolean.FALSE)
                     .setPageToken(nextPageToken).setMaxResults(MAX_EMAIL_PER_PAGES).execute();
         } catch (IOException | GeneralSecurityException e) {
-            LOG.error("Error while trying to get Gmail remote service", e.getMessage());
+            LOG.error("Error while trying to get Gmail remote service", e);
         }
 
         return listResponse;

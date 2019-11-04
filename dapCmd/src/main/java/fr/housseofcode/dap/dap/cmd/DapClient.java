@@ -24,6 +24,8 @@ public class DapClient {
 
     /** Default Dap WS URl. */
     private static final String DEFAULT_WS_URL = "http://localhost:8080";
+    /** allow network connections */
+    static NetworkUtils nu = new NetworkUtils();
 
     /**
      * Retrieve Data from the DaP server.
@@ -43,7 +45,16 @@ public class DapClient {
      */
     public static String buildUrl(final String path, final String userId) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(DEFAULT_WS_URL).append(path).append("?userId=").append(userId);
+
+        builder.append(DEFAULT_WS_URL);
+
+        if (path.startsWith("/")) {
+            builder.append(path);
+        } else {
+            builder.append("/").append(path);
+        }
+
+        builder.append("?userId=").append(userId);
         return builder.toString();
     }
 
@@ -56,7 +67,12 @@ public class DapClient {
         final StringBuilder response = new StringBuilder();
         try {
             final URL url = new URL(wsPath);
-            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            //final URL url = new URL("http://localhost:8080/email/unread/count");
+
+            final HttpURLConnection conn = nu.createConnection(url);
+            //final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "text/plain");
 
@@ -78,6 +94,7 @@ public class DapClient {
         }
 
         return response.toString();
+        //return "48";
     }
 
 }
