@@ -178,7 +178,7 @@
 					<minimumTokens>75</minimumTokens>
 
 					<rulesets>
-						<ruleset>/hoc/pmd/pmd_ruleset.xml</ruleset>
+						<ruleset>/hoc/pmd/pmd_ruleset_hardWay.xml</ruleset>
 					</rulesets>
 				</configuration>
 			</plugin>
