@@ -8,18 +8,18 @@
     </description>
 
 	<!-- Here's some rules we'll specify one at a time -->
-    <rule ref="category/java/bestpractices.xml />
-    <rule ref="category/java/basic.xml />
-    <rule ref="category/java/braces.xml />
-    <rule ref="category/java/clone.xml />
-    <rule ref="category/java/codesize.xml />
+    <rule ref="category/java/bestpractices.xml" />
+    <rule ref="category/java/basic.xml" />
+    <rule ref="category/java/braces.xml" />
+    <rule ref="category/java/clone.xml" />
+    <rule ref="category/java/codesize.xml" />
     
-    <rule ref="category/java/comments.xml />
-    <rule ref="category/java/coupling.xml />
-    <rule ref="category/java/design.xml />
-    <rule ref="category/java/empty.xml />
-    <rule ref="category/java/finalizers.xml />
-    <rule ref="category/java/ 	imports.xml />
+    <rule ref="category/java/comments.xml" />
+    <rule ref="category/java/coupling.xml" />
+    <rule ref="category/java/design.xml" />
+    <rule ref="category/java/empty.xml" />
+    <rule ref="category/java/finalizers.xml" />
+    <rule ref="category/java/imports.xml" />
 
 	<!-- We want to customize this rule a bit, change the message and raise the priority  -->
     <rule ref="category/java/errorprone.xml/EmptyCatchBlock" message="Must handle exceptions">
