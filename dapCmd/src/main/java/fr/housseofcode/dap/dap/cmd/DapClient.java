@@ -68,11 +68,7 @@ public class DapClient {
         try {
             final URL url = new URL(wsPath);
 
-            //final URL url = new URL("http://localhost:8080/email/unread/count");
-
             final HttpURLConnection conn = nu.createConnection(url);
-            //final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "text/plain");
 
@@ -86,15 +82,17 @@ public class DapClient {
                 }
                 conn.disconnect();
             } else {
-                LOG.error("Bad HTTP Response for : " + wsPath + " : " + conn.getResponseCode());
+
+                LOG.error("Bad HTTP Response for : {0} : {1}", wsPath, conn.getResponseCode());
             }
+            
+            String toto = "A" + "ZZZZZZZZZZ" + "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
 
         } catch (IOException e) {
             LOG.error("Error while calling WS", e);
         }
 
         return response.toString();
-        //return "48";
     }
 
 }

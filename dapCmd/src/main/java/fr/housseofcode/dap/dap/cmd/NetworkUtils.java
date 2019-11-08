@@ -14,7 +14,6 @@ import java.net.URL;
 public class NetworkUtils {
 
     public HttpURLConnection createConnection(URL url) throws IOException {
-        final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        return conn;
+        return (HttpURLConnection) url.openConnection();
     }
 }
