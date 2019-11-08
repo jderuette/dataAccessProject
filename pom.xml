@@ -26,7 +26,7 @@
 
 		<mainDir>${project.basedir}</mainDir>
 
-		<sonar.projectKey>jderuette_dataAccessProject</sonar.projectKey>
+		<!-- <sonar.projectKey>jderuette_dataAccessProject</sonar.projectKey> -->
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.organization>jderuette</sonar.organization>
 	</properties>
